@@ -1,3 +1,4 @@
+class_name Biplane
 extends KinematicBody
 
 signal update_fuel(value)
@@ -19,21 +20,23 @@ export var reload_time := 0.2
 var _rotation_inertia := Vector3.ZERO
 var _actual_speed := flight_speed
 var _can_shoot := true
+var player_id := ""
 
 onready var _reload_timer : Timer = $ReloadTimer
 
 
 func _physics_process(delta:float)->void:
-	var yaw := Input.get_axis("right", "left")
-	var pitch := Input.get_axis("up", "down")
-	var roll := Input.get_axis("roll_left", "roll_right")
+	var yaw := Input.get_axis("right" + player_id, "left" + player_id)
+	var pitch := Input.get_axis("up" + player_id, "down" + player_id)
+	var roll := Input.get_axis("roll_left" + player_id, "roll_right" + player_id)
 	
-	if Input.is_action_pressed("thrust") and _actual_speed < max_speed and secs_fuel > 0:
-		_actual_speed += delta * accel_factor
-	elif not Input.is_action_pressed("thrust") and _actual_speed > flight_speed:
+	if Input.is_action_pressed("thrust" + player_id) and secs_fuel > 0:
+		if _actual_speed < max_speed:
+			_actual_speed += delta * accel_factor
+	elif _actual_speed > flight_speed:
 		_actual_speed -= delta * deaccel_factor
 	
-	if Input.is_action_pressed("shoot") and _can_shoot and ammo > 0:
+	if Input.is_action_pressed("shoot" + player_id) and _can_shoot and ammo > 0:
 		_shoot()
 	
 	_calculate_rotation_inertia(yaw, pitch, roll, delta)

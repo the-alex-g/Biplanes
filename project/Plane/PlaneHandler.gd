@@ -1,17 +1,19 @@
+class_name PlaneHandler
 extends Spatial
 
 signal update_pilot_view(texture)
 signal update_fuel(value)
 signal update_ammo(value)
 
-export var camera_distance_from_plane := 10
-export var camera_vertical_offset := -1
+export var camera_distance_from_plane := 10.0
+export var camera_vertical_offset := -1.0
 
 onready var _camera : Camera = $MainCamera
 onready var _plane = $PilotViewport/Biplane
 onready var _pilot_viewport : Viewport = $PilotViewport
 
-var plane_position : Vector3 setget ,_get_plane_position
+var plane_position : Vector3 #setget ,_get_plane_position
+var player_id : int setget _set_player_id
 
 
 func _process(_delta:float)->void:
@@ -26,6 +28,12 @@ func _process(_delta:float)->void:
 
 func _get_plane_position()->Vector3:
 	return _plane.global_translation
+
+
+func _set_player_id(value:int)->void:
+	player_id = value
+	_plane.set_deferred("player_id", "_" + str(value))
+	print("hey, did this happen")
 
 
 func _on_Biplane_update_fuel(value:float)->void:

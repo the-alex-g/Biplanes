@@ -1,0 +1,38 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Main/MasterHUD.gd" type="Script" id=1]
+
+[node name="MasterHUD" type="CanvasLayer"]
+script = ExtResource( 1 )
+
+[node name="Control" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Viewport0" type="TextureRect" parent="Control"]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="Viewport1" type="TextureRect" parent="Control"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -40.0
+margin_bottom = 40.0
+grow_horizontal = 0
+
+[node name="Viewport2" type="TextureRect" parent="Control"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -40.0
+margin_right = 40.0
+grow_vertical = 0
+
+[node name="Viewport3" type="TextureRect" parent="Control"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -40.0
+margin_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
