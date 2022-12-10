@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Plane/Biplane.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Plane/PlaneHandler.gd" type="Script" id=2]
+[ext_resource path="res://Plane/PlaneHUD.tscn" type="PackedScene" id=3]
+
+[node name="PlaneHandler" type="Spatial"]
+script = ExtResource( 2 )
+camera_vertical_offset = 2
+
+[node name="MainCamera" type="Camera" parent="."]
+current = true
+
+[node name="PilotViewport" type="Viewport" parent="."]
+size = Vector2( 256, 150 )
+render_target_v_flip = true
+
+[node name="Biplane" parent="PilotViewport" instance=ExtResource( 1 )]
+
+[node name="PlaneHUD" parent="." instance=ExtResource( 3 )]
+
+[node name="CSGBox" type="CSGBox" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -7.77676, 0, -13.8669 )
+
+[connection signal="update_pilot_view" from="." to="PlaneHUD" method="_on_PlaneHandler_update_pilot_view"]
