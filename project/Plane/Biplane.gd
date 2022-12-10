@@ -8,14 +8,14 @@ signal update_ammo(value)
 # turning speed in revolutions per second
 export var turn_speed := 0.8
 export var roll_speed := 2.0
-export var flight_speed := 2.0
-export var lift_factor := 1.0
+export var flight_speed := 40.0
+export (float, 0.0, 0.9) var lift_factor := 0.5
 export var gravity := 20.0
 export var accel_factor := 1.5
 export var deaccel_factor := 1.0
 export var secs_fuel := 60.0
 export var ammo := 20
-export var max_speed := 3.0
+export var max_speed := 60.0
 export var reload_time := 0.2
 export var gravity_mitigation := 19.0
 # damage per shot. Hah.
@@ -37,9 +37,9 @@ func _physics_process(delta:float)->void:
 	
 	if Input.is_action_pressed("thrust" + player_id) and secs_fuel > 0:
 		if _actual_speed < max_speed:
-			_actual_speed += delta * accel_factor
+			_actual_speed += delta * accel_factor * (max_speed - flight_speed)
 	elif _actual_speed > flight_speed:
-		_actual_speed -= delta * deaccel_factor
+		_actual_speed -= delta * deaccel_factor * (max_speed - flight_speed) / 2
 	
 	if Input.is_action_pressed("shoot" + player_id) and _can_shoot and ammo > 0:
 		_shoot()
@@ -51,7 +51,7 @@ func _physics_process(delta:float)->void:
 	rotate_object_local(Vector3.FORWARD, _rotation_inertia.z * delta)
 	
 	# I don't know why this works, but it does. https://www.reddit.com/r/godot/comments/g4d232/how_to_get_a_kinematicbody_to_move_in_its_local/
-	var movement_vector := transform.basis.xform(Vector3(0, lift_factor, -1).normalized()) * _actual_speed
+	var movement_vector := transform.basis.xform(Vector3(0, lift_factor, -1)) * _actual_speed
 	# the gravity mitigation is for ease of flight.
 	movement_vector.y -= (gravity - gravity_mitigation)
 	
@@ -82,7 +82,7 @@ func _calculate_rotation_inertia(yaw:float, pitch:float, roll:float, delta:float
 		_rotation_inertia.y += pitch * delta * accel_factor * percent_total_speed
 	
 	if roll == 0 and _rotation_inertia.z != 0:
-		_rotation_inertia.z -= delta * sign(_rotation_inertia.z) * deaccel_factor * roll_speed / turn_speed
+		_rotation_inertia.z -= delta * sign(_rotation_inertia.z) * deaccel_factor * roll_speed / turn_speed * 2
 		if abs(_rotation_inertia.z) < 0.05:
 			_rotation_inertia.z = 0
 	elif roll != 0 and abs(_rotation_inertia.z) < roll_speed:

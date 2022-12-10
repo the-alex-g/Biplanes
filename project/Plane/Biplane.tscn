@@ -9,8 +9,8 @@ points = PoolVector3Array( 0, 2, 0, 1, 20, -1, 1, 20, 1, -1, 20, 1, -1, 20, -1 )
 
 [node name="Biplane" type="KinematicBody"]
 script = ExtResource( 1 )
-lift_factor = 0.5
 deaccel_factor = 1.1
+gravity_mitigation = 0.0
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 shape = SubResource( 1 )

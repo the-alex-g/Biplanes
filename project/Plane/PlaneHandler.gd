@@ -2,6 +2,7 @@ class_name PlaneHandler
 extends Spatial
 
 signal update_pilot_view(texture)
+signal update_altitude(value)
 signal update_fuel(value)
 signal update_ammo(value)
 signal update_health(value)
@@ -17,6 +18,10 @@ var plane_position : Vector3 setget ,_get_plane_position
 var player_id : int setget _set_player_id
 
 
+func _ready()->void:
+	_plane.translation.x = 10 * player_id
+
+
 func _process(_delta:float)->void:
 	_camera.translation = Vector3(
 		_plane.translation.x,
@@ -25,6 +30,7 @@ func _process(_delta:float)->void:
 	)
 	_camera.rotation.x = -atan(camera_vertical_offset / camera_distance_from_plane)
 	emit_signal("update_pilot_view", _pilot_viewport.get_texture())
+	emit_signal("update_altitude", _get_plane_position().y)
 
 
 func _get_plane_position()->Vector3:
