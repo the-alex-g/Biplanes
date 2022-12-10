@@ -20,3 +20,15 @@ margin_right = -5.0
 margin_bottom = -5.0
 grow_horizontal = 0
 grow_vertical = 0
+
+[node name="FuelBar" type="ProgressBar" parent="Control"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -50.0
+margin_top = -19.0
+margin_right = 50.0
+margin_bottom = -5.0
+max_value = 60.0
+value = 60.0
