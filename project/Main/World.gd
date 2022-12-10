@@ -21,7 +21,7 @@ func add_planes(new_players:int)->void:
 		plane_handler_inst.set_deferred("player_id", player_id)
 		if players == 2:
 			viewport.size = Vector2(512, 600)
-		else:
+		elif players > 2:
 			viewport.size = Vector2(512, 300)
 
 

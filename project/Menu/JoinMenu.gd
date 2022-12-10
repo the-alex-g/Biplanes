@@ -33,8 +33,8 @@ func _add_player_actions(player_index:int)->void:
 	InputMap.add_action("shoot" + player_id_tag)
 	
 	# add all events that use joystick motion
-	_add_joy_motion_event(player_index, JOY_AXIS_2, -1.0, "roll_right" + player_id_tag)
-	_add_joy_motion_event(player_index, JOY_AXIS_2, 1.0, "roll_left" + player_id_tag)
+	_add_joy_motion_event(player_index, JOY_AXIS_2, 1.0, "roll_right" + player_id_tag)
+	_add_joy_motion_event(player_index, JOY_AXIS_2, -1.0, "roll_left" + player_id_tag)
 	
 	_add_joy_motion_event(player_index, JOY_AXIS_0, 1.0, "right" + player_id_tag)
 	_add_joy_motion_event(player_index, JOY_AXIS_0, -1.0, "left" + player_id_tag)
