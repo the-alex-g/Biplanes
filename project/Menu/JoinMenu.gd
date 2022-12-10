@@ -33,49 +33,30 @@ func _add_player_actions(player_index:int)->void:
 	InputMap.add_action("shoot" + player_id_tag)
 	
 	# add all events that use joystick motion
-	var m_event := InputEventJoypadMotion.new()
-	m_event.device = player_index
-	m_event.axis = JOY_AXIS_2
-	m_event.axis_value = -1.0
-	InputMap.action_add_event("roll_right" + player_id_tag, m_event)
+	_add_joy_motion_event(player_index, JOY_AXIS_2, -1.0, "roll_right" + player_id_tag)
+	_add_joy_motion_event(player_index, JOY_AXIS_2, 1.0, "roll_left" + player_id_tag)
 	
-	m_event = InputEventJoypadMotion.new()
-	m_event.device = player_index
-	m_event.axis = JOY_AXIS_2
-	m_event.axis_value = 1.0
-	InputMap.action_add_event("roll_left" + player_id_tag, m_event)
+	_add_joy_motion_event(player_index, JOY_AXIS_0, 1.0, "right" + player_id_tag)
+	_add_joy_motion_event(player_index, JOY_AXIS_0, -1.0, "left" + player_id_tag)
 	
-	m_event = InputEventJoypadMotion.new()
-	m_event.device = player_index
-	m_event.axis = JOY_AXIS_0
-	m_event.axis_value = 1.0
-	InputMap.action_add_event("right" + player_id_tag, m_event)
-	
-	m_event = InputEventJoypadMotion.new()
-	m_event.device = player_index
-	m_event.axis = JOY_AXIS_0
-	m_event.axis_value = -1.0
-	InputMap.action_add_event("left" + player_id_tag, m_event)
-	
-	m_event = InputEventJoypadMotion.new()
-	m_event.device = player_index
-	m_event.axis = JOY_AXIS_1
-	m_event.axis_value = 1.0
-	InputMap.action_add_event("down" + player_id_tag, m_event)
-	
-	m_event = InputEventJoypadMotion.new()
-	m_event.device = player_index
-	m_event.axis = JOY_AXIS_1
-	m_event.axis_value = -1.0
-	InputMap.action_add_event("up" + player_id_tag, m_event)
+	_add_joy_motion_event(player_index, JOY_AXIS_1, 1.0, "down" + player_id_tag)
+	_add_joy_motion_event(player_index, JOY_AXIS_1, -1.0, "up" + player_id_tag)
 	
 	# add all events that use joystick buttons
-	var b_event := InputEventJoypadButton.new()
-	b_event.device = player_index
-	b_event.button_index = JOY_BUTTON_7
-	InputMap.action_add_event("thrust" + player_id_tag, b_event)
-	
-	b_event = InputEventJoypadButton.new()
-	b_event.device = player_index
-	b_event.button_index = JOY_BUTTON_6
-	InputMap.action_add_event("shoot" + player_id_tag, b_event)
+	_add_joy_button_event(player_index, JOY_BUTTON_7, "thrust" + player_id_tag)
+	_add_joy_button_event(player_index, JOY_BUTTON_6, "shoot" + player_id_tag)
+
+
+func _add_joy_motion_event(device:int, axis:int, axis_value:float, action:String)->void:
+	var event := InputEventJoypadMotion.new()
+	event.device = device
+	event.axis = axis
+	event.axis_value = axis_value
+	InputMap.action_add_event(action, event)
+
+
+func _add_joy_button_event(device:int, button:int, action:String)->void:
+	var event := InputEventJoypadButton.new()
+	event.device = device
+	event.button_index = button
+	InputMap.action_add_event(action, event)
