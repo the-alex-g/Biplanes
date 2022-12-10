@@ -5,6 +5,7 @@ signal update_ammo(value)
 
 # turning speed in revolutions per second
 export var turn_speed := 0.8
+export var roll_speed := 2.0
 export var flight_speed := 2.0
 export var lift_factor := 1.0
 export var gravity := 2.1
@@ -42,7 +43,7 @@ func _physics_process(delta:float)->void:
 	rotate_object_local(Vector3.FORWARD, _rotation_inertia.z * delta)
 	
 	# I don't know why this works, but it does. https://www.reddit.com/r/godot/comments/g4d232/how_to_get_a_kinematicbody_to_move_in_its_local/
-	var movement_vector := transform.basis.xform(Vector3(0, lift_factor, -1)) * _actual_speed
+	var movement_vector := transform.basis.xform(Vector3(0, lift_factor, -1).normalized()) * _actual_speed
 	movement_vector.y -= gravity
 	
 	var _collision := move_and_collide(movement_vector * delta)
@@ -51,7 +52,7 @@ func _physics_process(delta:float)->void:
 		secs_fuel -= delta * _actual_speed / flight_speed
 		emit_signal("update_fuel", secs_fuel)
 	else:
-		_actual_speed -= delta / 4
+		_actual_speed -= delta / 8
 
 
 func _calculate_rotation_inertia(yaw:float, pitch:float, roll:float, delta:float)->void:
@@ -72,11 +73,11 @@ func _calculate_rotation_inertia(yaw:float, pitch:float, roll:float, delta:float
 		_rotation_inertia.y += pitch * delta * accel_factor * percent_total_speed
 	
 	if roll == 0 and _rotation_inertia.z != 0:
-		_rotation_inertia.z -= delta * sign(_rotation_inertia.z) * deaccel_factor
+		_rotation_inertia.z -= delta * sign(_rotation_inertia.z) * deaccel_factor * roll_speed / turn_speed
 		if abs(_rotation_inertia.z) < 0.05:
 			_rotation_inertia.z = 0
-	elif roll != 0 and abs(_rotation_inertia.z) < turn_speed:
-		_rotation_inertia.z += roll * delta * accel_factor * percent_total_speed
+	elif roll != 0 and abs(_rotation_inertia.z) < roll_speed:
+		_rotation_inertia.z += roll * delta * accel_factor * percent_total_speed * roll_speed / turn_speed
 
 
 func _shoot()->void:

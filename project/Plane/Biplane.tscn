@@ -6,6 +6,8 @@
 
 [node name="Biplane" type="KinematicBody"]
 script = ExtResource( 1 )
+lift_factor = 0.5
+gravity = 1.1
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 shape = SubResource( 1 )
