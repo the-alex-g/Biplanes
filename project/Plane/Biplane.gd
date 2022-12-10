@@ -1,6 +1,7 @@
 extends KinematicBody
 
 signal update_fuel(value)
+signal update_ammo(value)
 
 # turning speed in revolutions per second
 export var turn_speed := 0.8
@@ -12,20 +13,27 @@ export var deaccel_factor := 1.0
 export var secs_fuel := 60.0
 export var ammo := 20
 export var max_speed := 3.0
+export var reload_time := 0.2
 
 var _rotation_inertia := Vector3.ZERO
 var _actual_speed := flight_speed
+var _can_shoot := true
+
+onready var _reload_timer : Timer = $ReloadTimer
 
 
 func _physics_process(delta:float)->void:
 	var yaw := Input.get_axis("right", "left")
 	var pitch := Input.get_axis("up", "down")
-	var roll := Input.get_axis("roll_right", "roll_left")
+	var roll := Input.get_axis("roll_left", "roll_right")
 	
 	if Input.is_action_pressed("thrust") and _actual_speed < max_speed and secs_fuel > 0:
 		_actual_speed += delta * accel_factor
 	elif not Input.is_action_pressed("thrust") and _actual_speed > flight_speed:
 		_actual_speed -= delta * deaccel_factor
+	
+	if Input.is_action_pressed("shoot") and _can_shoot and ammo > 0:
+		_shoot()
 	
 	_calculate_rotation_inertia(yaw, pitch, roll, delta)
 	
@@ -43,7 +51,7 @@ func _physics_process(delta:float)->void:
 		secs_fuel -= delta * _actual_speed / flight_speed
 		emit_signal("update_fuel", secs_fuel)
 	else:
-		_actual_speed -= delta * deaccel_factor
+		_actual_speed -= delta / 4
 
 
 func _calculate_rotation_inertia(yaw:float, pitch:float, roll:float, delta:float)->void:
@@ -69,3 +77,12 @@ func _calculate_rotation_inertia(yaw:float, pitch:float, roll:float, delta:float
 			_rotation_inertia.z = 0
 	elif roll != 0 and abs(_rotation_inertia.z) < turn_speed:
 		_rotation_inertia.z += roll * delta * accel_factor * percent_total_speed
+
+
+func _shoot()->void:
+	_can_shoot = false
+	ammo -= 1
+	emit_signal("update_ammo", ammo)
+	_reload_timer.start(reload_time)
+	yield(_reload_timer, "timeout")
+	_can_shoot = true

@@ -22,3 +22,6 @@ depth = 1.0
 [node name="FlyerCamera" type="Camera" parent="CSGCylinder"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 1.12095, 4.89984e-08 )
 current = true
+
+[node name="ReloadTimer" type="Timer" parent="."]
+one_shot = true

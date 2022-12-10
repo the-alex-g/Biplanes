@@ -32,3 +32,16 @@ margin_right = 50.0
 margin_bottom = -5.0
 max_value = 60.0
 value = 60.0
+
+[node name="AmmoBar" type="ProgressBar" parent="Control"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -50.0
+margin_top = -38.0
+margin_right = 50.0
+margin_bottom = -24.0
+max_value = 20.0
+step = 1.0
+value = 20.0
