@@ -6,16 +6,16 @@ signal update_health(value)
 signal update_ammo(value)
 
 # turning speed in revolutions per second
-export var turn_speed := 0.8
+export var turn_speed := 0.6
 export var roll_speed := 2.0
-export var flight_speed := 40.0
-export (float, 0.0, 0.9) var lift_factor := 0.5
-export var gravity := 20.0
+export var flight_speed := 20.0
+export (float, 0.0, 0.9) var lift_factor := 0.25
+export var gravity := 5.0
 export var accel_factor := 1.5
 export var deaccel_factor := 1.0
 export var secs_fuel := 60.0
 export var ammo := 20
-export var max_speed := 60.0
+export var max_speed := 10.0
 export var reload_time := 0.2
 export var gravity_mitigation := 19.0
 # damage per shot. Hah.
@@ -60,12 +60,20 @@ func _physics_process(delta:float)->void:
 	if secs_fuel > 0:
 		secs_fuel -= delta * _actual_speed / flight_speed
 		emit_signal("update_fuel", secs_fuel)
-	elif gravity_mitigation > 0:
-		gravity_mitigation -= delta
+	elif gravity_mitigation > -20:
+		gravity_mitigation -= delta * 3
+		if rotation.x > -PI/4:
+			rotation.x -= delta
+		rotation += Vector3(
+			 randf() - 0.5,
+			 randf() - 0.5,
+			 randf() - 0.5
+		) * delta * 2
 
 
 func _calculate_rotation_inertia(yaw:float, pitch:float, roll:float, delta:float)->void:
 	var percent_total_speed := _actual_speed / flight_speed
+	print(percent_total_speed)
 	
 	if yaw == 0 and _rotation_inertia.x != 0:
 		_rotation_inertia.x -= delta * sign(_rotation_inertia.x) * deaccel_factor
