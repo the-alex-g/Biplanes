@@ -2,6 +2,7 @@ class_name Biplane
 extends KinematicBody
 
 signal update_fuel(value)
+signal update_health(value)
 signal update_ammo(value)
 
 # turning speed in revolutions per second
@@ -9,13 +10,17 @@ export var turn_speed := 0.8
 export var roll_speed := 2.0
 export var flight_speed := 2.0
 export var lift_factor := 1.0
-export var gravity := 2.1
+export var gravity := 20.0
 export var accel_factor := 1.5
 export var deaccel_factor := 1.0
 export var secs_fuel := 60.0
 export var ammo := 20
 export var max_speed := 3.0
 export var reload_time := 0.2
+export var gravity_mitigation := 19.0
+# damage per shot. Hah.
+export var dps := 1.0
+export var health := 10.0
 
 var _rotation_inertia := Vector3.ZERO
 var _actual_speed := flight_speed
@@ -47,15 +52,16 @@ func _physics_process(delta:float)->void:
 	
 	# I don't know why this works, but it does. https://www.reddit.com/r/godot/comments/g4d232/how_to_get_a_kinematicbody_to_move_in_its_local/
 	var movement_vector := transform.basis.xform(Vector3(0, lift_factor, -1).normalized()) * _actual_speed
-	movement_vector.y -= gravity
+	# the gravity mitigation is for ease of flight.
+	movement_vector.y -= (gravity - gravity_mitigation)
 	
 	var _collision := move_and_collide(movement_vector * delta)
 	
 	if secs_fuel > 0:
 		secs_fuel -= delta * _actual_speed / flight_speed
 		emit_signal("update_fuel", secs_fuel)
-	else:
-		_actual_speed -= delta / 8
+	elif gravity_mitigation > 0:
+		gravity_mitigation -= delta
 
 
 func _calculate_rotation_inertia(yaw:float, pitch:float, roll:float, delta:float)->void:
@@ -87,6 +93,21 @@ func _shoot()->void:
 	_can_shoot = false
 	ammo -= 1
 	emit_signal("update_ammo", ammo)
+	
+	for object in $CSGCylinder/FiringCone.get_overlapping_bodies():
+		if object.has_method("damage"):
+			object.damage(dps)
+	
 	_reload_timer.start(reload_time)
 	yield(_reload_timer, "timeout")
 	_can_shoot = true
+
+
+func damage(amount:int)->void:
+	health -= amount
+	if health <= 0:
+		secs_fuel = 0
+		ammo = 0
+		emit_signal("update_ammo", ammo)
+		emit_signal("update_fuel", secs_fuel)
+	emit_signal("update_health", health)

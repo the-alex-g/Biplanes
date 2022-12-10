@@ -1,13 +1,16 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Plane/Biplane.gd" type="Script" id=1]
 
 [sub_resource type="CylinderShape" id=1]
 
+[sub_resource type="ConvexPolygonShape" id=2]
+points = PoolVector3Array( 0, 2, 0, 1, 20, -1, 1, 20, 1, -1, 20, 1, -1, 20, -1 )
+
 [node name="Biplane" type="KinematicBody"]
 script = ExtResource( 1 )
 lift_factor = 0.5
-gravity = 1.1
+deaccel_factor = 1.1
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 shape = SubResource( 1 )
@@ -24,6 +27,12 @@ depth = 1.0
 [node name="FlyerCamera" type="Camera" parent="CSGCylinder"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 1.12095, 4.89984e-08 )
 current = true
+
+[node name="FiringCone" type="Area" parent="CSGCylinder"]
+
+[node name="CollisionShape" type="CollisionShape" parent="CSGCylinder/FiringCone"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.264291 )
+shape = SubResource( 2 )
 
 [node name="ReloadTimer" type="Timer" parent="."]
 one_shot = true
