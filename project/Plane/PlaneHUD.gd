@@ -1,6 +1,6 @@
 extends CanvasLayer
 
-onready var _pilot_view : TextureRect = $Control/PilotView
+onready var _wide_view : TextureRect = $Control/WideView
 onready var _fuel_bar : ProgressBar = $Control/FuelBar
 onready var _ammo_bar : ProgressBar = $Control/AmmoBar
 onready var _health_bar : ProgressBar = $Control/HealthBar
@@ -8,7 +8,7 @@ onready var _altitude_label : Label = $Control/Altitude
 
 
 func _on_PlaneHandler_update_pilot_view(texture:ViewportTexture)->void:
-	_pilot_view.texture = texture
+	_wide_view.texture = texture
 
 
 func _on_PlaneHandler_update_fuel(value:float)->void:

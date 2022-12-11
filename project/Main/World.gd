@@ -15,8 +15,8 @@ func add_planes(new_players:int)->void:
 	for player_id in players:
 		var plane_handler : PlaneHandler = load("res://Plane/PlaneHandler.tscn").instance()
 		var viewport : Viewport = get_node("Viewport" + str(player_id))
+		plane_handler.player_id = player_id
 		viewport.add_child(plane_handler)
-		plane_handler.set_deferred("player_id", player_id)
 		if players == 2:
 			viewport.size = Vector2(502, 590)
 		elif players > 2:

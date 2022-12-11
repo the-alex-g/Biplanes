@@ -10,7 +10,7 @@ script = ExtResource( 1 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="PilotView" type="TextureRect" parent="Control"]
+[node name="WideView" type="TextureRect" parent="Control"]
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
@@ -21,18 +21,6 @@ margin_right = -5.0
 margin_bottom = -5.0
 grow_horizontal = 0
 grow_vertical = 0
-
-[node name="TextureRect" type="TextureRect" parent="Control/PilotView"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -20.0
-margin_top = -20.0
-margin_right = 20.0
-margin_bottom = 20.0
-texture = ExtResource( 2 )
-stretch_mode = 4
 
 [node name="FuelBar" type="ProgressBar" parent="Control"]
 anchor_left = 0.5
@@ -75,3 +63,15 @@ margin_top = 30.0
 margin_right = 40.0
 margin_bottom = 14.0
 text = "Altitude: "
+
+[node name="TextureRect" type="TextureRect" parent="Control"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -25.0
+margin_top = -25.0
+margin_right = 25.0
+margin_bottom = 25.0
+texture = ExtResource( 2 )
+stretch_mode = 1

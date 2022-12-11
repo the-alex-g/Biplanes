@@ -10,12 +10,17 @@ signal update_health(value)
 export var camera_distance_from_plane := 50.0
 export var camera_vertical_offset := 15.0
 
-onready var _camera : Camera = $MainCamera
-onready var _plane = $PilotViewport/Biplane
-onready var _pilot_viewport : Viewport = $PilotViewport
+onready var _camera : Camera = $Viewport/MainCamera
+onready var _plane = $Biplane
+onready var _pilot_viewport : Viewport = $Viewport
 
 var plane_position : Vector3 setget ,_get_plane_position
-var player_id : int setget _set_player_id
+var player_id : int
+
+
+func _ready()->void:
+	_plane.translation.x = 15 * player_id
+	_plane.player_id = "_" + str(player_id)
 
 
 func _process(_delta:float)->void:
@@ -31,11 +36,6 @@ func _process(_delta:float)->void:
 
 func _get_plane_position()->Vector3:
 	return _plane.global_translation
-
-
-func _set_player_id(value:int)->void:
-	player_id = value
-	_plane.set_deferred("player_id", "_" + str(value))
 
 
 func _on_Biplane_update_fuel(value:float)->void:
