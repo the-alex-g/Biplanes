@@ -1,37 +1,38 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Plane/Biplane.gd" type="Script" id=1]
+[ext_resource path="res://Plane/Meshes/Biplane.obj" type="ArrayMesh" id=2]
+[ext_resource path="res://Resources/PlaneMaterial.tres" type="Material" id=5]
 
-[sub_resource type="CylinderShape" id=1]
+[sub_resource type="BoxShape" id=3]
+extents = Vector3( 1, 1, 4 )
 
 [sub_resource type="ConvexPolygonShape" id=2]
-points = PoolVector3Array( 0, 2, 0, 1, 20, -1, 1, 20, 1, -1, 20, 1, -1, 20, -1 )
+points = PoolVector3Array( 0, 0, 0, 3, 80, -3, 3, 80, 3, -3, 80, 3, -3, 80, -3 )
 
 [node name="Biplane" type="KinematicBody"]
 script = ExtResource( 1 )
-deaccel_factor = 1.1
 gravity_mitigation = 0.0
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
-shape = SubResource( 1 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1 )
+shape = SubResource( 3 )
 
-[node name="CSGCylinder" type="CSGCylinder" parent="."]
-transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0.500051 )
-radius = 0.25
+[node name="Body" type="CSGMesh" parent="."]
+transform = Transform( -4.37114e-08, 1.06581e-14, -1, 0, 1, 1.06581e-14, 1, 4.6588e-22, -4.37114e-08, 0, 0, 0.500051 )
+mesh = ExtResource( 2 )
+material = ExtResource( 5 )
 
-[node name="CSGBox" type="CSGBox" parent="CSGCylinder"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.800651, 3.49976e-08 )
-height = 1.0
-depth = 1.0
-
-[node name="FlyerCamera" type="Camera" parent="CSGCylinder"]
-transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 1.12095, 4.89984e-08 )
+[node name="FlyerCamera" type="Camera" parent="Body"]
+transform = Transform( -4.37114e-08, 0, 1, 1.06581e-14, 1, 4.6588e-22, -1, 1.06581e-14, -4.37114e-08, -3, 1.62362, 1.31134e-07 )
 current = true
+far = 1000.0
 
-[node name="FiringCone" type="Area" parent="CSGCylinder"]
+[node name="FiringCone" type="Area" parent="Body"]
+transform = Transform( -4.37114e-08, -1, -4.37114e-08, 1.06581e-14, -4.37114e-08, 1, -1, 4.37114e-08, 1.25688e-14, -7, -2, 3.0598e-07 )
 
-[node name="CollisionShape" type="CollisionShape" parent="CSGCylinder/FiringCone"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.264291 )
+[node name="CollisionShape" type="CollisionShape" parent="Body/FiringCone"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 2.26429 )
 shape = SubResource( 2 )
 
 [node name="ReloadTimer" type="Timer" parent="."]

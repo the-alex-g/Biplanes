@@ -7,8 +7,8 @@ signal update_fuel(value)
 signal update_ammo(value)
 signal update_health(value)
 
-export var camera_distance_from_plane := 10.0
-export var camera_vertical_offset := -1.0
+export var camera_distance_from_plane := 50.0
+export var camera_vertical_offset := 15.0
 
 onready var _camera : Camera = $MainCamera
 onready var _plane = $PilotViewport/Biplane
@@ -16,10 +16,6 @@ onready var _pilot_viewport : Viewport = $PilotViewport
 
 var plane_position : Vector3 setget ,_get_plane_position
 var player_id : int setget _set_player_id
-
-
-func _ready()->void:
-	_plane.translation.x = 10 * player_id
 
 
 func _process(_delta:float)->void:

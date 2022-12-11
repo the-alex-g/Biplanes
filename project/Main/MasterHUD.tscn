@@ -9,7 +9,14 @@ script = ExtResource( 1 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 
+[node name="ColorRect" type="ColorRect" parent="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 1 )
+
 [node name="Viewport0" type="TextureRect" parent="Control"]
+margin_left = 5.0
+margin_top = 5.0
 margin_right = 40.0
 margin_bottom = 40.0
 
@@ -17,14 +24,18 @@ margin_bottom = 40.0
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -40.0
+margin_top = 5.0
+margin_right = -5.0
 margin_bottom = 40.0
 grow_horizontal = 0
 
 [node name="Viewport2" type="TextureRect" parent="Control"]
 anchor_top = 1.0
 anchor_bottom = 1.0
+margin_left = 5.0
 margin_top = -40.0
 margin_right = 40.0
+margin_bottom = -5.0
 grow_vertical = 0
 
 [node name="Viewport3" type="TextureRect" parent="Control"]
@@ -34,5 +45,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = -40.0
 margin_top = -40.0
+margin_right = -5.0
+margin_bottom = -5.0
 grow_horizontal = 0
 grow_vertical = 0

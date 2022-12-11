@@ -6,16 +6,16 @@ signal update_health(value)
 signal update_ammo(value)
 
 # turning speed in revolutions per second
-export var turn_speed := 0.6
-export var roll_speed := 2.0
-export var flight_speed := 20.0
+export var turn_speed := 1.0
+export var roll_speed := 1.5
+export var flight_speed := 30.0
 export (float, 0.0, 0.9) var lift_factor := 0.25
-export var gravity := 5.0
-export var accel_factor := 1.5
-export var deaccel_factor := 1.0
+export var gravity := 7.5
+export var accel_factor := 1.6
+export var deaccel_factor := 1.2
 export var secs_fuel := 60.0
 export var ammo := 20
-export var max_speed := 10.0
+export var max_speed := 45.0
 export var reload_time := 0.2
 export var gravity_mitigation := 19.0
 # damage per shot. Hah.
@@ -55,7 +55,9 @@ func _physics_process(delta:float)->void:
 	# the gravity mitigation is for ease of flight.
 	movement_vector.y -= (gravity - gravity_mitigation)
 	
-	var _collision := move_and_collide(movement_vector * delta)
+	var collision := move_and_collide(movement_vector * delta)
+	if collision != null:
+		_death()
 	
 	if secs_fuel > 0:
 		secs_fuel -= delta * _actual_speed / flight_speed
@@ -73,7 +75,6 @@ func _physics_process(delta:float)->void:
 
 func _calculate_rotation_inertia(yaw:float, pitch:float, roll:float, delta:float)->void:
 	var percent_total_speed := _actual_speed / flight_speed
-	print(percent_total_speed)
 	
 	if yaw == 0 and _rotation_inertia.x != 0:
 		_rotation_inertia.x -= delta * sign(_rotation_inertia.x) * deaccel_factor
@@ -102,7 +103,7 @@ func _shoot()->void:
 	ammo -= 1
 	emit_signal("update_ammo", ammo)
 	
-	for object in $CSGCylinder/FiringCone.get_overlapping_bodies():
+	for object in $Body/FiringCone.get_overlapping_bodies():
 		if object.has_method("damage"):
 			object.damage(dps)
 	
@@ -114,8 +115,14 @@ func _shoot()->void:
 func damage(amount:int)->void:
 	health -= amount
 	if health <= 0:
-		secs_fuel = 0
-		ammo = 0
-		emit_signal("update_ammo", ammo)
-		emit_signal("update_fuel", secs_fuel)
+		_death()
+	emit_signal("update_health", health)
+
+
+func _death()->void:
+	secs_fuel = 0
+	ammo = 0
+	health = 0
+	emit_signal("update_ammo", ammo)
+	emit_signal("update_fuel", secs_fuel)
 	emit_signal("update_health", health)

@@ -1,0 +1,20 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/Biplane.obj-5ddc6cdcc9a58928b55b3d17a2cb9a61.mesh"
+
+[deps]
+
+files=[ "res://.import/Biplane.obj-5ddc6cdcc9a58928b55b3d17a2cb9a61.mesh" ]
+
+source_file="res://Plane/Meshes/Biplane.obj"
+dest_files=[ "res://.import/Biplane.obj-5ddc6cdcc9a58928b55b3d17a2cb9a61.mesh", "res://.import/Biplane.obj-5ddc6cdcc9a58928b55b3d17a2cb9a61.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+octahedral_compression=true
+optimize_mesh_flags=4286
