@@ -17,11 +17,13 @@ onready var _pilot_viewport : Viewport = $Viewport
 
 var plane_position : Vector3 setget ,_get_plane_position
 var player_id : int
+var color : Color
 
 
 func _ready()->void:
 	_plane.translation.x = 15 * player_id
 	_plane.player_id = "_" + str(player_id)
+	_plane.color = color
 
 
 func _process(_delta:float)->void:

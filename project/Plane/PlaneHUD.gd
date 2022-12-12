@@ -25,7 +25,7 @@ func _on_PlaneHandler_update_health(value:float)->void:
 
 
 func _on_PlaneHandler_update_altitude(value:float)->void:
-	_altitude_label.text = "Altitude: " + str(floor(value / 5))
+	_altitude_label.text = "Altitude: " + str(floor(value * 7 / 3)) + " ft"
 
 
 func _on_PlaneHandler_update_radar(from:Vector2, direction:float, points:PoolVector2Array)->void:

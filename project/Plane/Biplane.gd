@@ -26,6 +26,7 @@ var _rotation_inertia := Vector3.ZERO
 var _actual_speed := flight_speed
 var _can_shoot := true
 var player_id := ""
+var color : Color setget _set_color
 
 onready var _reload_timer : Timer = $ReloadTimer
 
@@ -137,3 +138,10 @@ func _death(explode := false)->void:
 
 func get_forward()->Vector3:
 	return transform.basis.xform(Vector3(0, 0, -1))
+
+
+func _set_color(value:Color)->void:
+	color = value
+	var material = SpatialMaterial.new()
+	material.albedo_color = color
+	$Body.material = material

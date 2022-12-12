@@ -3,6 +3,7 @@ extends Spatial
 signal export_viewport_texture(texture, port)
 
 var players := 0 setget _set_players
+var plane_colors := {}
 var _plane_handlers := []
 
 
@@ -25,6 +26,7 @@ func add_planes(new_players:int)->void:
 		var viewport : Viewport = get_node("Viewport" + str(player_id))
 		
 		plane_handler.player_id = player_id
+		plane_handler.color = plane_colors[player_id]
 		viewport.add_child(plane_handler)
 		_plane_handlers.append(plane_handler)
 		

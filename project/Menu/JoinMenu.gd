@@ -1,22 +1,44 @@
 extends Control
 
-var _planes_joined := []
+const COLORS := [
+	Color.white,
+	Color.forestgreen,
+	Color.blue,
+	Color.red,
+	Color.yellow,
+	Color.black,
+	Color.peru
+]
 
-onready var _planes_joined_label : Label = $PlanesJoined
+var _planes_joined := []
+var _planes_ready := 0
+var _plane_colors := {}
+
+onready var _join_widgets := [
+	$HBoxContainer/JoinWidget,
+	$HBoxContainer/JoinWidget2,
+	$HBoxContainer/JoinWidget3,
+	$HBoxContainer/JoinWidget4,
+]
+
+
+func _ready()->void:
+	for widget in _join_widgets:
+		widget.connect("player_joined", self, "_on_plane_joined")
+		widget.connect("player_left", self, "_on_plane_left")
+		widget.connect("player_ready", self, "_on_plane_ready")
+		widget.connect("player_not_ready", self, "_on_plane_not_ready")
+		widget.connect("change_color", self, "_on_plane_change_color")
 
 
 func _input(event:InputEvent)->void:
 	if event is InputEventJoypadButton and event.is_pressed():
-		if event.button_index == 0:
-			if not _planes_joined.has(event.device):
-				_planes_joined.append(event.device)
-				_add_player_actions(event.device)
-				_planes_joined_label.text = "Players Joined: " + str(_planes_joined.size())
-			else:
-				var world : Spatial = preload("res://Main/World.tscn").instance()
-				get_tree().root.add_child(world)
-				world.set_deferred("players", _planes_joined.size())
-				queue_free()
+		if event.button_index == 0 and _planes_joined.size() == _planes_ready and _planes_ready > 0:
+			var world : Spatial = preload("res://Main/World.tscn").instance()
+			get_tree().root.add_child(world)
+			world.set_deferred("plane_colors", _plane_colors)
+			world.set_deferred("players", _planes_joined.size())
+			queue_free()
 
 
 func _add_player_actions(player_index:int)->void:
@@ -60,3 +82,47 @@ func _add_joy_button_event(device:int, button:int, action:String)->void:
 	event.device = device
 	event.button_index = button
 	InputMap.action_add_event(action, event)
+
+
+func _on_plane_joined(id:int)->void:
+	_planes_joined.append(id)
+	_plane_colors[id] = _get_unused_color()
+	_join_widgets[id].color = _plane_colors[id]
+	_add_player_actions(id)
+
+
+func _on_plane_left(id:int)->void:
+	_planes_joined.erase(id)
+	_join_widgets[id].color = Color(0,0,0,0)
+
+
+func _on_plane_ready()->void:
+	_planes_ready += 1
+
+
+func _on_plane_not_ready()->void:
+	_planes_ready -= 1
+
+
+func _on_plane_change_color(direction:int, id:int)->void:
+	_plane_colors[id] = _get_unused_color(direction, id)
+	_join_widgets[id].color = _plane_colors[id]
+
+
+func _get_unused_color(direction := 0, id := -1)->Color:
+	var final_color : Color
+	var used_colors := _plane_colors.values()
+	
+	if direction == 0:
+		for color in COLORS:
+			if not used_colors.has(color):
+				final_color = color
+				break
+	else:
+		var index : int = COLORS.find(_plane_colors[id])
+		while used_colors.has(COLORS[index]):
+			index += direction
+			index %= COLORS.size()
+		final_color = COLORS[index]
+	
+	return final_color
