@@ -20,7 +20,7 @@ func update_radar(from:Vector2, new_direction:float, other_points:PoolVector2Arr
 
 func _draw():
 	draw_circle(Vector2.ONE * draw_radius, draw_radius + 2, Color.black)
-	draw_circle(Vector2.ONE * draw_radius, draw_radius, Color.darkgreen)
+	draw_circle(Vector2.ONE * draw_radius, draw_radius, Color.forestgreen)
 	draw_circle(Vector2.ONE * draw_radius, pointer_length, Color.black)
 	draw_line(Vector2.ONE * draw_radius, Vector2.ONE * draw_radius + (Vector2.RIGHT * (pointer_length + 2)).rotated(direction + PI/2), Color.white, 2)
 	if points.size() > 0:

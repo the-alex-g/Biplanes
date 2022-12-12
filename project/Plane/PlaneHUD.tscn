@@ -54,9 +54,9 @@ margin_left = 5.0
 margin_top = 5.0
 margin_right = -5.0
 margin_bottom = 25.0
-max_value = 10.0
+max_value = 80.0
 step = 1.0
-value = 10.0
+value = 80.0
 
 [node name="Altitude" type="Label" parent="Control"]
 margin_left = 5.0

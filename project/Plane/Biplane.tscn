@@ -7,7 +7,7 @@
 extents = Vector3( 1, 1, 4 )
 
 [sub_resource type="ConvexPolygonShape" id=2]
-points = PoolVector3Array( 0, 0, 0, 3, 80, -3, 3, 80, 3, -3, 80, 3, -3, 80, -3 )
+points = PoolVector3Array( 0, 0, 0, 4, 100, -4, 4, 100, 4, -4, 100, 4, -4, 100, -4 )
 
 [sub_resource type="SpatialMaterial" id=5]
 albedo_color = Color( 1, 0, 0, 1 )

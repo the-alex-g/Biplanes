@@ -28,12 +28,12 @@ render_target_v_flip = true
 
 [node name="MasterHUD" parent="." instance=ExtResource( 2 )]
 
-[node name="StaticBody" type="StaticBody" parent="."]
+[node name="Ground" type="StaticBody" parent="."]
 
-[node name="CollisionShape" type="CollisionShape" parent="StaticBody"]
+[node name="CollisionShape" type="CollisionShape" parent="Ground"]
 shape = SubResource( 1 )
 
-[node name="CSGBox" type="CSGBox" parent="StaticBody"]
+[node name="CSGBox" type="CSGBox" parent="Ground"]
 width = 1000.0
 height = 0.01
 depth = 1000.0

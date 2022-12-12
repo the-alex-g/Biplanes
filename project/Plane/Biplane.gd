@@ -7,7 +7,7 @@ signal update_ammo(value)
 
 # turning speed in revolutions per second
 export var turn_speed := 1.0
-export var roll_speed := 1.5
+#export var roll_speed := 1.3
 export var flight_speed := 30.0
 export (float, 0.0, 0.9) var lift_factor := 0.25
 export var gravity := 7.5
@@ -19,8 +19,8 @@ export var max_speed := 45.0
 export var reload_time := 0.2
 export var gravity_mitigation := 19.0
 # damage per shot. Hah.
-export var dps := 1.0
-export var health := 10.0
+export var dps := 10.0
+export var health := 80.0
 
 var _rotation_inertia := Vector3.ZERO
 var _actual_speed := flight_speed
@@ -37,7 +37,7 @@ func _physics_process(delta:float)->void:
 	
 	var yaw := Input.get_axis("right" + player_id, "left" + player_id)
 	var pitch := Input.get_axis("up" + player_id, "down" + player_id)
-	var roll := Input.get_axis("roll_left" + player_id, "roll_right" + player_id)
+	#var roll := Input.get_axis("roll_left" + player_id, "roll_right" + player_id)
 	
 	if Input.is_action_pressed("thrust" + player_id) and secs_fuel > 0:
 		if _actual_speed < max_speed:
@@ -48,11 +48,15 @@ func _physics_process(delta:float)->void:
 	if Input.is_action_pressed("shoot" + player_id) and _can_shoot and ammo > 0:
 		_shoot()
 	
-	_calculate_rotation_inertia(yaw, pitch, roll, delta)
+	_calculate_rotation_inertia(yaw, pitch, delta)
 	
-	rotate_object_local(Vector3.UP, _rotation_inertia.x * delta)
 	rotate_object_local(Vector3.RIGHT, _rotation_inertia.y * delta)
-	rotate_object_local(Vector3.FORWARD, _rotation_inertia.z * delta)
+	#left/right
+	rotation.y += _rotation_inertia.x * delta
+	
+#	rotate_object_local(Vector3.UP, _rotation_inertia.x * delta)
+#	rotate_object_local(Vector3.RIGHT, _rotation_inertia.y * delta)
+#	rotate_object_local(Vector3.FORWARD, _rotation_inertia.z * delta)
 	
 	# I don't know why this works, but it does. https://www.reddit.com/r/godot/comments/g4d232/how_to_get_a_kinematicbody_to_move_in_its_local/
 	var movement_vector := transform.basis.xform(Vector3(0, lift_factor, -1)) * _actual_speed
@@ -78,7 +82,7 @@ func _physics_process(delta:float)->void:
 		) * delta * 2
 
 
-func _calculate_rotation_inertia(yaw:float, pitch:float, roll:float, delta:float)->void:
+func _calculate_rotation_inertia(yaw:float, pitch:float, delta:float)->void:
 	var percent_total_speed := _actual_speed / flight_speed
 	
 	if yaw == 0 and _rotation_inertia.x != 0:
@@ -95,12 +99,12 @@ func _calculate_rotation_inertia(yaw:float, pitch:float, roll:float, delta:float
 	elif pitch != 0 and abs(_rotation_inertia.y) < turn_speed:
 		_rotation_inertia.y += pitch * delta * accel_factor * percent_total_speed
 	
-	if roll == 0 and _rotation_inertia.z != 0:
-		_rotation_inertia.z -= delta * sign(_rotation_inertia.z) * deaccel_factor * roll_speed / turn_speed * 2
-		if abs(_rotation_inertia.z) < 0.05:
-			_rotation_inertia.z = 0
-	elif roll != 0 and abs(_rotation_inertia.z) < roll_speed:
-		_rotation_inertia.z += roll * delta * accel_factor * percent_total_speed * roll_speed / turn_speed
+#	if roll == 0 and _rotation_inertia.z != 0:
+#		_rotation_inertia.z -= delta * sign(_rotation_inertia.z) * deaccel_factor * roll_speed / turn_speed * 2
+#		if abs(_rotation_inertia.z) < 0.05:
+#			_rotation_inertia.z = 0
+#	elif roll != 0 and abs(_rotation_inertia.z) < roll_speed:
+#		_rotation_inertia.z += roll * delta * accel_factor * percent_total_speed * roll_speed / turn_speed
 
 
 func _shoot()->void:
@@ -135,6 +139,7 @@ func death(explode := false)->void:
 	if explode:
 		$Body.visible = false
 		$ExplosionParticles.emitting = true
+		$CollisionShape.disabled = true
 
 
 func get_forward()->Vector3:
