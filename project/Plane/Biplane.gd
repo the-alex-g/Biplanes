@@ -65,9 +65,10 @@ func _physics_process(delta:float)->void:
 	
 	var collision := move_and_collide(movement_vector * delta)
 	if collision != null:
-		death(true)
-		if collision.collider.has_method("death"):
-			collision.collider.death(true)
+		if not collision.collider.is_in_group("Barriers"):
+			death(true)
+			if collision.collider.has_method("death"):
+				collision.collider.death(true)
 	if secs_fuel > 0:
 		secs_fuel -= delta * _actual_speed / flight_speed
 		emit_signal("update_fuel", secs_fuel)

@@ -24,7 +24,7 @@ var active := true
 
 
 func _ready()->void:
-	_plane.translation = (Vector3.RIGHT * (board_size - 10)).rotated(Vector3.UP, player_id * TAU / players)
+	_plane.translation = (Vector3.RIGHT * board_size / 2).rotated(Vector3.UP, player_id * TAU / players)
 	_plane.translation.y = 50
 	_plane.rotation.y = player_id * TAU / players + PI / 2
 	_plane.player_id = "_" + str(player_id)
