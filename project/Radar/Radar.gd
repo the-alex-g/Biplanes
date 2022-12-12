@@ -25,20 +25,14 @@ func _draw():
 	draw_line(Vector2.ONE * draw_radius, Vector2.ONE * draw_radius + (Vector2.RIGHT * (pointer_length + 2)).rotated(direction + PI/2), Color.white, 2)
 	if points.size() > 0:
 		var points_to_draw : PoolVector2Array = []
-		var nearest_point := Vector2.INF
+		var far_points : PoolVector2Array = []
 		for point in points:
 			if center_point.distance_squared_to(point) < scan_radius * scan_radius:
-				points_to_draw.append(point)
-			if center_point.distance_squared_to(point) < center_point.distance_squared_to(nearest_point):
-				nearest_point = point
-			
-		if points_to_draw.size() == 0:
-			var target := Vector2.ONE * draw_radius + (Vector2.RIGHT * draw_radius).rotated(nearest_point.angle_to_point(center_point) + PI/2)
-			target.x = draw_radius + (draw_radius - target.x)
-			draw_circle(target, point_radius, Color.red)
-		else:
-			for point in points_to_draw:
 				var target = Vector2(center_point.distance_to(point) * draw_radius / scan_radius, 0)
 				target = Vector2.ONE * draw_radius + target.rotated(point.angle_to_point(center_point) + PI/2)
 				target.x = draw_radius + (draw_radius - target.x)
 				draw_circle(target, point_radius, Color.lightgreen)
+			else:
+				var target := Vector2.ONE * draw_radius + (Vector2.RIGHT * draw_radius).rotated(point.angle_to_point(center_point) + PI/2)
+				target.x = draw_radius + (draw_radius - target.x)
+				draw_circle(target, point_radius, Color.red)

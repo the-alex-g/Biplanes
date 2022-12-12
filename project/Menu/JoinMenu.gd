@@ -14,6 +14,7 @@ var _planes_joined := []
 var _planes_ready := 0
 var _plane_colors := {}
 var _buffer := true
+var _planes_previously_joined := []
 
 onready var _join_widgets := [
 	$HBoxContainer/JoinWidget,
@@ -92,11 +93,15 @@ func _on_plane_joined(id:int)->void:
 	_planes_joined.append(id)
 	_plane_colors[id] = _get_unused_color()
 	_join_widgets[id].color = _plane_colors[id]
-	_add_player_actions(id)
+	if not _planes_previously_joined.has(id):
+		_planes_previously_joined.append(id)
+		_add_player_actions(id)
 
 
 func _on_plane_left(id:int)->void:
 	_planes_joined.erase(id)
+# warning-ignore:return_value_discarded
+	_plane_colors.erase(id)
 	_join_widgets[id].color = Color(0,0,0,0)
 
 

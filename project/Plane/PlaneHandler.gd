@@ -29,6 +29,8 @@ func _ready()->void:
 	_plane.rotation.y = player_id * TAU / players + PI / 2
 	_plane.player_id = "_" + str(player_id)
 	_plane.color = color
+	if players > 2:
+		_pilot_viewport.size /= 2
 
 
 func _process(_delta:float)->void:
