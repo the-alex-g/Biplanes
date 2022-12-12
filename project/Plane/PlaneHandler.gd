@@ -18,10 +18,14 @@ onready var _pilot_viewport : Viewport = $Viewport
 var plane_position : Vector3 setget ,_get_plane_position
 var player_id : int
 var color : Color
+var players : int
+var board_size : float
 
 
 func _ready()->void:
-	_plane.translation.x = 15 * player_id
+	_plane.translation = (Vector3.RIGHT * board_size / 2).rotated(Vector3.UP, player_id * TAU / players)
+	_plane.translation.y = 50
+	_plane.rotation.y = player_id * TAU / players + PI / 2
 	_plane.player_id = "_" + str(player_id)
 	_plane.color = color
 

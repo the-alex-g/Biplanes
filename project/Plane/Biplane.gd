@@ -61,8 +61,9 @@ func _physics_process(delta:float)->void:
 	
 	var collision := move_and_collide(movement_vector * delta)
 	if collision != null:
-		_death(true)
-	
+		death(true)
+		if collision.collider.has_method("death"):
+			collision.collider.death(true)
 	if secs_fuel > 0:
 		secs_fuel -= delta * _actual_speed / flight_speed
 		emit_signal("update_fuel", secs_fuel)
@@ -119,11 +120,11 @@ func _shoot()->void:
 func damage(amount:int)->void:
 	health -= amount
 	if health <= 0:
-		_death()
+		death()
 	emit_signal("update_health", health)
 
 
-func _death(explode := false)->void:
+func death(explode := false)->void:
 	secs_fuel = 0
 	ammo = 0
 	health = 0

@@ -13,6 +13,7 @@ const COLORS := [
 var _planes_joined := []
 var _planes_ready := 0
 var _plane_colors := {}
+var _buffer := true
 
 onready var _join_widgets := [
 	$HBoxContainer/JoinWidget,
@@ -34,11 +35,14 @@ func _ready()->void:
 func _input(event:InputEvent)->void:
 	if event is InputEventJoypadButton and event.is_pressed():
 		if event.button_index == 0 and _planes_joined.size() == _planes_ready and _planes_ready > 0:
-			var world : Spatial = preload("res://Main/World.tscn").instance()
-			get_tree().root.add_child(world)
-			world.set_deferred("plane_colors", _plane_colors)
-			world.set_deferred("players", _planes_joined.size())
-			queue_free()
+			if not _buffer:
+				var world : Spatial = preload("res://Main/World.tscn").instance()
+				get_tree().root.add_child(world)
+				world.set_deferred("plane_colors", _plane_colors)
+				world.set_deferred("players", _planes_joined.size())
+				queue_free()
+			else:
+				_buffer = false
 
 
 func _add_player_actions(player_index:int)->void:
@@ -102,6 +106,7 @@ func _on_plane_ready()->void:
 
 func _on_plane_not_ready()->void:
 	_planes_ready -= 1
+	_buffer = true
 
 
 func _on_plane_change_color(direction:int, id:int)->void:

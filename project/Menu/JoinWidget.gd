@@ -25,8 +25,9 @@ func _input(event:InputEvent)->void:
 							_joined = true
 							ready = false
 							emit_signal("player_joined", id)
-						else:
+						elif _joined and not ready:
 							ready = true
+							modulate = Color.aqua
 							emit_signal("player_ready")
 					BUTTON_MAPS.B:
 						if _joined and not ready:
@@ -35,11 +36,14 @@ func _input(event:InputEvent)->void:
 							emit_signal("player_left", id)
 						elif _joined and ready:
 							ready = false
+							modulate = color
 							emit_signal("player_not_ready")
 					BUTTON_MAPS.LEFT_SHOULDER:
-						emit_signal("change_color", -1, id)
+						if _joined and not ready:
+							emit_signal("change_color", -1, id)
 					BUTTON_MAPS.RIGHT_SHOULDER:
-						emit_signal("change_color", 1, id)
+						if _joined and not ready:
+							emit_signal("change_color", 1, id)
 
 
 func _set_color(value:Color)->void:

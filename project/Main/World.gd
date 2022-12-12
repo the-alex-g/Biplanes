@@ -27,6 +27,8 @@ func add_planes(new_players:int)->void:
 		
 		plane_handler.player_id = player_id
 		plane_handler.color = plane_colors[player_id]
+		plane_handler.board_size = 1000
+		plane_handler.players = players
 		viewport.add_child(plane_handler)
 		_plane_handlers.append(plane_handler)
 		
