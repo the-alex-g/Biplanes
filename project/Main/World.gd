@@ -14,7 +14,10 @@ func _process(_delta:float)->void:
 		var points : PoolVector3Array = []
 		for plane_handler_2 in _plane_handlers:
 			if plane_handler_1.player_id != plane_handler_2.player_id:
-				points.append(plane_handler_2.plane_position)
+				if plane_handler_2.active:
+					points.append(plane_handler_2.plane_position)
+		for plane in $AutomatedPlanes.get_children():
+			points.append(plane.global_translation)
 		plane_handler_1.update_radar_points(points)
 
 

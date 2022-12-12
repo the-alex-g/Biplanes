@@ -20,10 +20,11 @@ var player_id : int
 var color : Color
 var players : int
 var board_size : float
+var active := true
 
 
 func _ready()->void:
-	_plane.translation = (Vector3.RIGHT * board_size / 2).rotated(Vector3.UP, player_id * TAU / players)
+	_plane.translation = (Vector3.RIGHT * (board_size - 10) / 2).rotated(Vector3.UP, player_id * TAU / players)
 	_plane.translation.y = 50
 	_plane.rotation.y = player_id * TAU / players + PI / 2
 	_plane.player_id = "_" + str(player_id)
@@ -62,6 +63,8 @@ func _on_Biplane_update_ammo(value:float)->void:
 
 func _on_Biplane_update_health(value:float)->void:
 	emit_signal("update_health", value)
+	if value <= 0:
+		active = false
 
 
 func update_radar_points(points:PoolVector3Array)->void:
