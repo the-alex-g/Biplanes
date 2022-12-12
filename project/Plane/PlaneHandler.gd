@@ -61,5 +61,8 @@ func _on_Biplane_update_health(value:float)->void:
 func update_radar_points(points:PoolVector3Array)->void:
 	var flat_points : PoolVector2Array = []
 	for point in points:
-		flat_points.append(_to_vec2(point))
-	emit_signal("update_radar", _to_vec2(_get_plane_position()), _to_vec2(_plane.get_forward()).angle(), flat_points)
+		var q = _to_vec2(point)
+		flat_points.append(q)
+	var q = _to_vec2(_plane.get_forward())
+	q.y *= -1
+	emit_signal("update_radar", _to_vec2(_get_plane_position()), q.angle(), flat_points)

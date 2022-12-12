@@ -1,6 +1,9 @@
 class_name Radar
 extends Control
 
+export var point_radius := 3.0
+export var pointer_length := 6.0
+
 var scan_radius := 500.0
 var draw_radius := 50.0
 var center_point := Vector2.ZERO
@@ -16,9 +19,10 @@ func update_radar(from:Vector2, new_direction:float, other_points:PoolVector2Arr
 
 
 func _draw():
+	draw_circle(Vector2.ONE * draw_radius, draw_radius + 2, Color.black)
 	draw_circle(Vector2.ONE * draw_radius, draw_radius, Color.darkgreen)
-	draw_circle(Vector2.ONE * draw_radius, 6, Color.black)
-	draw_line(Vector2.ONE * draw_radius, Vector2.ONE * draw_radius + (Vector2.RIGHT * 6).rotated(direction), Color.lightgreen, 2)
+	draw_circle(Vector2.ONE * draw_radius, pointer_length, Color.black)
+	draw_line(Vector2.ONE * draw_radius, Vector2.ONE * draw_radius + (Vector2.RIGHT * (pointer_length + 2)).rotated(direction + PI/2), Color.white, 2)
 	if points.size() > 0:
 		var points_to_draw : PoolVector2Array = []
 		var nearest_point := Vector2.INF
@@ -29,10 +33,12 @@ func _draw():
 				nearest_point = point
 			
 		if points_to_draw.size() == 0:
-			var target := Vector2.ONE * draw_radius + (Vector2.RIGHT * draw_radius).rotated(nearest_point.angle_to_point(center_point))
-			draw_line(Vector2.ONE * draw_radius, target, Color.lightgreen, 2)
+			var target := Vector2.ONE * draw_radius + (Vector2.RIGHT * draw_radius).rotated(nearest_point.angle_to_point(center_point) + PI/2)
+			target.x = draw_radius + (draw_radius - target.x)
+			draw_circle(target, point_radius, Color.red)
 		else:
 			for point in points_to_draw:
 				var target = Vector2(center_point.distance_to(point) * draw_radius / scan_radius, 0)
-				target = Vector2.ONE * draw_radius + target.rotated(point.angle_to_point(center_point))
-				draw_circle(target, 5, Color.lightgreen)
+				target = Vector2.ONE * draw_radius + target.rotated(point.angle_to_point(center_point) + PI/2)
+				target.x = draw_radius + (draw_radius - target.x)
+				draw_circle(target, point_radius, Color.lightgreen)
