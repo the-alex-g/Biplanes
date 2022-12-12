@@ -31,6 +31,9 @@ onready var _reload_timer : Timer = $ReloadTimer
 
 
 func _physics_process(delta:float)->void:
+	if not $Body.visible:
+		return
+	
 	var yaw := Input.get_axis("right" + player_id, "left" + player_id)
 	var pitch := Input.get_axis("up" + player_id, "down" + player_id)
 	var roll := Input.get_axis("roll_left" + player_id, "roll_right" + player_id)
@@ -57,7 +60,7 @@ func _physics_process(delta:float)->void:
 	
 	var collision := move_and_collide(movement_vector * delta)
 	if collision != null:
-		_death()
+		_death(true)
 	
 	if secs_fuel > 0:
 		secs_fuel -= delta * _actual_speed / flight_speed
@@ -119,10 +122,18 @@ func damage(amount:int)->void:
 	emit_signal("update_health", health)
 
 
-func _death()->void:
+func _death(explode := false)->void:
 	secs_fuel = 0
 	ammo = 0
 	health = 0
 	emit_signal("update_ammo", ammo)
 	emit_signal("update_fuel", secs_fuel)
 	emit_signal("update_health", health)
+	
+	if explode:
+		$Body.visible = false
+		$ExplosionParticles.emitting = true
+
+
+func get_forward()->Vector3:
+	return transform.basis.xform(Vector3(0, 0, -1))

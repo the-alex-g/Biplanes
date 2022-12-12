@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Plane/Biplane.gd" type="Script" id=1]
 [ext_resource path="res://Plane/Meshes/Biplane.obj" type="ArrayMesh" id=2]
@@ -9,6 +9,13 @@ extents = Vector3( 1, 1, 4 )
 
 [sub_resource type="ConvexPolygonShape" id=2]
 points = PoolVector3Array( 0, 0, 0, 3, 80, -3, 3, 80, 3, -3, 80, 3, -3, 80, -3 )
+
+[sub_resource type="SpatialMaterial" id=5]
+albedo_color = Color( 1, 0, 0, 1 )
+
+[sub_resource type="CubeMesh" id=4]
+material = SubResource( 5 )
+size = Vector3( 1.5, 1.5, 1.5 )
 
 [node name="Biplane" type="KinematicBody"]
 script = ExtResource( 1 )
@@ -37,3 +44,16 @@ shape = SubResource( 2 )
 
 [node name="ReloadTimer" type="Timer" parent="."]
 one_shot = true
+
+[node name="ExplosionParticles" type="CPUParticles" parent="."]
+emitting = false
+amount = 25
+one_shot = true
+preprocess = 0.1
+explosiveness = 0.5
+randomness = 0.25
+lifetime_randomness = 0.25
+mesh = SubResource( 4 )
+spread = 180.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 4.0

@@ -25,6 +25,7 @@ far = 1000.0
 [connection signal="update_fuel" from="." to="PlaneHUD" method="_on_PlaneHandler_update_fuel"]
 [connection signal="update_health" from="." to="PlaneHUD" method="_on_PlaneHandler_update_health"]
 [connection signal="update_pilot_view" from="." to="PlaneHUD" method="_on_PlaneHandler_update_pilot_view"]
+[connection signal="update_radar" from="." to="PlaneHUD" method="_on_PlaneHandler_update_radar"]
 [connection signal="update_ammo" from="Biplane" to="." method="_on_Biplane_update_ammo"]
 [connection signal="update_fuel" from="Biplane" to="." method="_on_Biplane_update_fuel"]
 [connection signal="update_health" from="Biplane" to="." method="_on_Biplane_update_health"]
