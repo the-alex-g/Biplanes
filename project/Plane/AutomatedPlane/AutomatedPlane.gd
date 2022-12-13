@@ -1,5 +1,7 @@
 extends KinematicBody
 
+signal dead(killer_id)
+
 var health := 10
 var direction : float = PI / 4
 var speed := 30.0
@@ -10,6 +12,10 @@ export var reload_time := 0.2
 export var gravity_mitigation := 7.5
 # damage per shot. Hah.
 export var dps := 1.0
+
+
+func _ready()->void:
+	rotation.y = direction
 
 
 func _physics_process(delta:float)->void:
@@ -39,10 +45,11 @@ func _physics_process(delta:float)->void:
 		) * delta * 2
 
 
-func damage(amount:int)->void:
+func damage(amount:int, attacker_id:int)->void:
 	health -= amount
 	if health <= 0:
 		death()
+		emit_signal("dead", attacker_id)
 
 
 func death(explode := false)->void:

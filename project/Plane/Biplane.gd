@@ -4,6 +4,7 @@ extends KinematicBody
 signal update_fuel(value)
 signal update_health(value)
 signal update_ammo(value)
+signal dead(killer_id)
 
 # turning speed in revolutions per second
 export var turn_speed := 1.0
@@ -20,7 +21,7 @@ export var reload_time := 0.2
 export var gravity_mitigation := 19.0
 # damage per shot. Hah.
 export var dps := 10.0
-export var health := 80.0
+export var health := 60.0
 
 var _rotation_inertia := Vector3.ZERO
 var _actual_speed := flight_speed
@@ -115,17 +116,18 @@ func _shoot()->void:
 	
 	for object in $Body/FiringCone.get_overlapping_bodies():
 		if object.has_method("damage"):
-			object.damage(dps)
+			object.damage(dps, int(player_id[1]))
 	
 	_reload_timer.start(reload_time)
 	yield(_reload_timer, "timeout")
 	_can_shoot = true
 
 
-func damage(amount:int)->void:
+func damage(amount:int, attacker_id:int)->void:
 	health -= amount
 	if health <= 0:
 		death()
+		emit_signal("dead", attacker_id)
 	emit_signal("update_health", health)
 
 

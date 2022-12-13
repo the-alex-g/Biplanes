@@ -49,6 +49,7 @@ func add_planes(new_players:int)->void:
 		plane_handler.color = plane_colors[player_id]
 		plane_handler.board_size = half_ground_size
 		plane_handler.players = players
+		plane_handler.connect("plane_down", self, "_on_plane_down")
 		viewport.add_child(plane_handler)
 		_plane_handlers.append(plane_handler)
 		
@@ -79,3 +80,7 @@ func _generate_scenery()->void:
 			lerp(-(half_ground_size - margin), half_ground_size - margin, randf())
 		)
 		_ground.add_child(piece)
+
+
+func _on_plane_down(killer_id:int)->void:
+	_plane_handlers[killer_id].score()

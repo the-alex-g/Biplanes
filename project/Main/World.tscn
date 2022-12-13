@@ -19,6 +19,8 @@ extents = Vector3( 600, 150, 1 )
 [node name="World" type="Spatial"]
 script = ExtResource( 1 )
 half_ground_size = 600
+max_scenery = 120
+min_scenery = 90
 
 [node name="Viewport0" type="Viewport" parent="."]
 size = Vector2( 1024, 600 )
@@ -82,3 +84,4 @@ shape = SubResource( 4 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 50, 500 )
 
 [connection signal="export_viewport_texture" from="." to="MasterHUD" method="_on_World_export_viewport_texture"]
+[connection signal="dead" from="AutomatedPlanes/AutomatedPlane" to="." method="_on_plane_down"]

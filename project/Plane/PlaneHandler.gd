@@ -7,6 +7,7 @@ signal update_fuel(value)
 signal update_ammo(value)
 signal update_health(value)
 signal update_radar(from, points)
+signal plane_down(killer)
 
 export var camera_distance_from_plane := 50.0
 export var camera_vertical_offset := 15.0
@@ -21,10 +22,11 @@ var color : Color
 var players : int
 var board_size : float
 var active := true
+var kills := 0
 
 
 func _ready()->void:
-	_plane.translation = (Vector3.RIGHT * board_size / 2).rotated(Vector3.UP, player_id * TAU / players)
+	_plane.translation = (Vector3.RIGHT * 300).rotated(Vector3.UP, player_id * TAU / players)
 	_plane.translation.y = 50
 	_plane.rotation.y = player_id * TAU / players + PI / 2
 	_plane.player_id = "_" + str(player_id)
@@ -77,3 +79,12 @@ func update_radar_points(points:PoolVector3Array)->void:
 	var q = _to_vec2(_plane.get_forward())
 	q.y *= -1
 	emit_signal("update_radar", _to_vec2(_get_plane_position()), q.angle(), flat_points)
+
+
+func _on_Biplane_dead(killer_id:int)->void:
+	emit_signal("plane_down", killer_id)
+
+
+func score()->void:
+	kills += 1
+	print("YAY")
