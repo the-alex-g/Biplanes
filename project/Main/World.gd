@@ -22,6 +22,7 @@ func _ready()->void:
 	_ground_mesh.width = half_ground_size * 2
 	_ground_mesh.depth = half_ground_size * 2
 	_generate_scenery()
+	_spawn_auto_plane()
 
 
 func _process(_delta:float)->void:
@@ -34,7 +35,8 @@ func _process(_delta:float)->void:
 				if plane_handler_2.active:
 					points.append(plane_handler_2.plane_position)
 		for plane in $AutomatedPlanes.get_children():
-			points.append(plane.global_translation)
+			if not plane.dead:
+				points.append(plane.global_translation)
 		plane_handler_1.update_radar_points(points)
 
 
@@ -49,6 +51,7 @@ func add_planes(new_players:int)->void:
 		plane_handler.color = plane_colors[player_id]
 		plane_handler.board_size = half_ground_size
 		plane_handler.players = players
+# warning-ignore:return_value_discarded
 		plane_handler.connect("plane_down", self, "_on_plane_down")
 		viewport.add_child(plane_handler)
 		_plane_handlers.append(plane_handler)
@@ -82,5 +85,19 @@ func _generate_scenery()->void:
 		_ground.add_child(piece)
 
 
-func _on_plane_down(killer_id:int)->void:
-	_plane_handlers[killer_id].score()
+func _on_plane_down(killer_id:int, auto_plane := false)->void:
+	if killer_id > -1:
+		_plane_handlers[killer_id].score()
+	if auto_plane:
+		_spawn_auto_plane()
+
+
+func _spawn_auto_plane()->void:
+	var plane := preload("res://Plane/AutomatedPlane/AutomatedPlane.tscn").instance()
+	# warning-ignore:return_value_discarded
+	plane.connect("dead", self, "_on_plane_down", [true], CONNECT_ONESHOT)
+	var plane_position := Vector3(lerp(-(half_ground_size - 10), half_ground_size - 10, randf()), lerp(50, 250, randf()), -(half_ground_size - 10))
+	var plane_direction := (randi() % 4) * TAU / 4
+	plane.translation = plane_position.rotated(Vector3.UP, plane_direction)
+	plane.direction = plane_direction + lerp(-PI/3, PI/3, randf()) + PI
+	$AutomatedPlanes.add_child(plane)

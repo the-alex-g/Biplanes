@@ -1,8 +1,7 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Main/World.gd" type="Script" id=1]
 [ext_resource path="res://Main/MasterHUD.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Plane/AutomatedPlane/AutomatedPlane.tscn" type="PackedScene" id=3]
 
 [sub_resource type="BoxShape" id=1]
 extents = Vector3( 500, 0.005, 500 )
@@ -80,8 +79,4 @@ shape = SubResource( 4 )
 
 [node name="AutomatedPlanes" type="Spatial" parent="."]
 
-[node name="AutomatedPlane" parent="AutomatedPlanes" instance=ExtResource( 3 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 50, 500 )
-
 [connection signal="export_viewport_texture" from="." to="MasterHUD" method="_on_World_export_viewport_texture"]
-[connection signal="dead" from="AutomatedPlanes/AutomatedPlane" to="." method="_on_plane_down"]

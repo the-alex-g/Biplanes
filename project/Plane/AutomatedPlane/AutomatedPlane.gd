@@ -1,3 +1,4 @@
+class_name AutoPlane
 extends KinematicBody
 
 signal dead(killer_id)
@@ -5,6 +6,8 @@ signal dead(killer_id)
 var health := 10
 var direction : float = PI / 4
 var speed := 30.0
+var _shot_down := false
+var dead := false
 
 export var gravity := 7.5
 export var ammo := 20
@@ -48,11 +51,18 @@ func _physics_process(delta:float)->void:
 func damage(amount:int, attacker_id:int)->void:
 	health -= amount
 	if health <= 0:
+		_shot_down = true
 		death()
 		emit_signal("dead", attacker_id)
 
 
 func death(explode := false)->void:
+	
+	if not _shot_down and not dead:
+		emit_signal("dead", -1)
+	
+	dead = true
+	
 	health = 0
 	gravity_mitigation = 0
 	
