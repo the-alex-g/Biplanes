@@ -153,9 +153,9 @@ func _set_color(value:Color)->void:
 	color = value
 	var material := ShaderMaterial.new()
 	material.shader = load("res://Plane/stripe_shader.gdshader")
-	material.set("shader_param/main_color",Vector3(
-		color.r,
-		color.g,
-		color.b
-	))
+	material.set("shader_param/main_color",Vector3(color.r, color.g, color.b))
+	var stripe_color := Vector3.ONE - Vector3(color.r, color.g, color.b)
+	if stripe_color == Vector3.ONE:
+		stripe_color *= 0.99
+	material.set("shader_param/fin_color",stripe_color)
 	$Body.material = material
