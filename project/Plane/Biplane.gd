@@ -151,6 +151,11 @@ func get_forward()->Vector3:
 
 func _set_color(value:Color)->void:
 	color = value
-	var material = SpatialMaterial.new()
-	material.albedo_color = color
+	var material := ShaderMaterial.new()
+	material.shader = load("res://Plane/stripe_shader.gdshader")
+	material.set("shader_param/main_color",Vector3(
+		color.r,
+		color.g,
+		color.b
+	))
 	$Body.material = material
