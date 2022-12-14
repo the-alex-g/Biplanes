@@ -5,19 +5,20 @@ signal launch
 signal upgrade(field)
 
 enum OptionSets {MAIN, ENGINES, GUNS, FRAME}
-enum ButtonMaps {A, B, X, Y}
 
+const BUTTON_MAPS := {"A":0, "B":1, "X":2, "Y":3, "Back":10}
 const UPGRADE_FIELDS := [
-	["Engines", "Guns", "Frame", "Launch"],
-	["speed", "fuel", "", "Back"],
-	["damage", "ammo", "reload", "Back"],
-	["health", "manuverability", "", "Back"],
+	["Engines", "Guns", "Frame", "", "Launch"],
+	["speed", "fuel", "", "", "Back"],
+	["damage", "ammo", "reload", "range", "Back"],
+	["health", "manuverability", "", "", "Back"],
 ]
 
 onready var option_text_1 : Label = $VBoxContainer/Option1/Text
 onready var option_text_2 : Label = $VBoxContainer/Option2/Text
 onready var option_text_3 : Label = $VBoxContainer/Option3/Text
 onready var option_text_4 : Label = $VBoxContainer/Option4/Text
+onready var option_text_5 : Label = $VBoxContainer/Option5/Text
 onready var resources_label : Label = $VBoxContainer/Label
 
 export var disabled := false
@@ -27,8 +28,8 @@ var resources := 0 setget _set_resources
 var _menu : int = OptionSets.MAIN setget _set_menu
 var _costs := {
 	"speed":10, "fuel":10,
-	"damage":10, "ammo":10, "reload":5,
-	"health":15, "manuverability":10,
+	"damage":10, "ammo":10, "reload":5, "range":10,
+	"health":15, "manuverability":10, "new plane":-20
 }
 
 
@@ -46,45 +47,49 @@ func _input(event:InputEvent)->void:
 				match _menu:
 					OptionSets.MAIN:
 						match event.button_index:
-							ButtonMaps.A:
+							BUTTON_MAPS.A:
 								_set_menu(OptionSets.ENGINES)
-							ButtonMaps.X:
+							BUTTON_MAPS.X:
 								_set_menu(OptionSets.GUNS)
-							ButtonMaps.Y:
+							BUTTON_MAPS.Y:
 								_set_menu(OptionSets.FRAME)
-							ButtonMaps.B:
+							BUTTON_MAPS.Back:
 								emit_signal("launch")
 					OptionSets.ENGINES:
 						match event.button_index:
-							ButtonMaps.A:
+							BUTTON_MAPS.A:
 								_upgrade("speed")
-							ButtonMaps.X:
+							BUTTON_MAPS.X:
 								_upgrade("fuel")
-							ButtonMaps.B:
+							BUTTON_MAPS.Back:
 								_set_menu(OptionSets.MAIN)
 					OptionSets.GUNS:
 						match event.button_index:
-							ButtonMaps.A:
+							BUTTON_MAPS.A:
 								_upgrade("damage")
-							ButtonMaps.X:
+							BUTTON_MAPS.X:
 								_upgrade("ammo")
-							ButtonMaps.Y:
+							BUTTON_MAPS.Y:
 								_upgrade("reload")
-							ButtonMaps.B:
+							BUTTON_MAPS.B:
+								_upgrade("range")
+							BUTTON_MAPS.Back:
 								_set_menu(OptionSets.MAIN)
 					OptionSets.FRAME:
 						match event.button_index:
-							ButtonMaps.A:
+							BUTTON_MAPS.A:
 								_upgrade("health")
-							ButtonMaps.X:
+							BUTTON_MAPS.X:
 								_upgrade("manuverability")
-							ButtonMaps.B:
+							BUTTON_MAPS.Y:
+								_upgrade("new plane")
+							BUTTON_MAPS.Back:
 								_set_menu(OptionSets.MAIN)
 
 
 func _set_menu(value:int)->void:
 	_menu = value
-	for i in 4:
+	for i in 5:
 		var field_name : String = UPGRADE_FIELDS[value][i]
 		if field_name != "":
 			var text := field_name.capitalize()
@@ -98,11 +103,14 @@ func _set_menu(value:int)->void:
 
 func _upgrade(field:String)->void:
 	var cost : int = _costs[field]
-	if resources >= cost:
-		_set_resources(resources - cost)
-		_costs[field] += 5
-		emit_signal("upgrade", field)
-		_set_menu(_menu)
+	if field != "":
+		if field == "new plane":
+			pass
+		elif resources >= cost:
+			_set_resources(resources - cost)
+			_costs[field] += 5
+			emit_signal("upgrade", field)
+			_set_menu(_menu)
 
 
 func _set_resources(value:int)->void:

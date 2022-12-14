@@ -11,6 +11,7 @@ signal plane_down(killer)
 signal upgrade(field_name)
 signal update_kills(value)
 signal setup_plane(id)
+signal can_hit(value)
 
 export var camera_distance_from_plane := 50.0
 export var camera_vertical_offset := 15.0
@@ -107,3 +108,7 @@ func _on_PlaneHUD_launch()->void:
 	_relocate_plane_to_start()
 	kills = 0
 	_plane.restart()
+
+
+func _on_Biplane_can_hit(value:bool)->void:
+	emit_signal("can_hit", value)

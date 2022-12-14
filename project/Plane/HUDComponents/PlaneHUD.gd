@@ -80,3 +80,10 @@ func _on_PlaneHandler_setup_plane(id:int)->void:
 
 func _on_PlaneHandler_update_kills(value:int)->void:
 	_kills = value
+
+
+func _on_PlaneHandler_can_hit(value:bool)->void:
+	if value:
+		$Control/FiringRing.modulate = Color(0, 1, 0, 0.75)
+	else:
+		$Control/FiringRing.modulate = Color(1, 0, 0, 0.75)

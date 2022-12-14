@@ -5,7 +5,7 @@
 [ext_resource path="res://Plane/stripe_shader.gdshader" type="Shader" id=3]
 
 [sub_resource type="BoxShape" id=3]
-extents = Vector3( 1, 1, 4 )
+extents = Vector3( 1.5, 1, 4 )
 
 [sub_resource type="ShaderMaterial" id=6]
 shader = ExtResource( 3 )
@@ -26,7 +26,7 @@ size = Vector3( 1.5, 1.5, 1.5 )
 script = ExtResource( 2 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.5 )
 shape = SubResource( 3 )
 
 [node name="Body" type="CSGMesh" parent="."]

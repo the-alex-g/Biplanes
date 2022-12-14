@@ -5,6 +5,7 @@ signal update_fuel(value)
 signal update_health(value)
 signal update_ammo(value)
 signal dead(killer_id)
+signal can_hit(value)
 
 # turning speed in revolutions per second
 export var turn_speed := 1.0
@@ -22,6 +23,7 @@ export var dps := 10.0
 export var max_health := 60.0
 export var max_fuel := 120.0
 export var max_ammo := 20
+export var gun_range := 100.0 setget _set_range
 
 var _health := 60.0
 var _secs_fuel := 120.0
@@ -32,6 +34,7 @@ var _can_shoot := true
 var player_id := ""
 var color : Color setget _set_color
 var dead := false
+var range_finder := false
 
 onready var _reload_timer : Timer = $ReloadTimer
 
@@ -86,6 +89,9 @@ func _physics_process(delta:float)->void:
 			 randf() - 0.5,
 			 randf() - 0.5
 		) * delta * 2
+	
+	if range_finder:
+		emit_signal("can_hit", _check_range())
 
 
 func _calculate_rotation_inertia(yaw:float, pitch:float, delta:float)->void:
@@ -111,6 +117,13 @@ func _calculate_rotation_inertia(yaw:float, pitch:float, delta:float)->void:
 #			_rotation_inertia.z = 0
 #	elif roll != 0 and abs(_rotation_inertia.z) < roll_speed:
 #		_rotation_inertia.z += roll * delta * accel_factor * percent_total_speed * roll_speed / turn_speed
+
+
+func _check_range()->bool:
+	for object in $Body/FiringCone.get_overlapping_bodies():
+		if object.has_method("damage"):
+			return true
+	return false
 
 
 func _shoot()->void:
@@ -190,6 +203,21 @@ func _on_PlaneHandler_upgrade(field_name:String)->void:
 		"manuverability":
 			accel_factor *= 1.25
 			deaccel_factor *= 1.25
+		"range":
+			_set_range(gun_range + 10)
+
+
+func _set_range(value:float)->void:
+	gun_range = value
+	var spread := gun_range * 0.04
+	var shape := [
+		Vector3.ZERO,
+		Vector3(spread, gun_range, spread),
+		Vector3(-spread, gun_range, spread),
+		Vector3(-spread, gun_range, -spread),
+		Vector3(spread, gun_range, -spread)
+	]
+	$Body/FiringCone/CollisionShape.shape.points = shape
 
 
 func restart()->void:
