@@ -14,20 +14,24 @@ export (float, 0.0, 0.9) var lift_factor := 0.25
 export var gravity := 7.5
 export var accel_factor := 1.6
 export var deaccel_factor := 1.2
-export var secs_fuel := 120.0
-export var ammo := 20
 export var max_speed := 45.0
 export var reload_time := 0.2
-export var gravity_mitigation := 19.0
+export var gravity_mitigation := 0.0
 # damage per shot. Hah.
 export var dps := 10.0
-export var health := 60.0
+export var max_health := 60.0
+export var max_fuel := 120.0
+export var max_ammo := 20
 
+var _health := 60.0
+var _secs_fuel := 120.0
+var _ammo := 20
 var _rotation_inertia := Vector3.ZERO
 var _actual_speed := flight_speed
 var _can_shoot := true
 var player_id := ""
 var color : Color setget _set_color
+var dead := false
 
 onready var _reload_timer : Timer = $ReloadTimer
 
@@ -40,13 +44,13 @@ func _physics_process(delta:float)->void:
 	var pitch := Input.get_axis("up" + player_id, "down" + player_id)
 	#var roll := Input.get_axis("roll_left" + player_id, "roll_right" + player_id)
 	
-	if Input.is_action_pressed("thrust" + player_id) and secs_fuel > 0:
+	if Input.is_action_pressed("thrust" + player_id) and _secs_fuel > 0:
 		if _actual_speed < max_speed:
 			_actual_speed += delta * accel_factor * (max_speed - flight_speed)
 	elif _actual_speed > flight_speed:
 		_actual_speed -= delta * deaccel_factor * (max_speed - flight_speed) / 2
 	
-	if Input.is_action_pressed("shoot" + player_id) and _can_shoot and ammo > 0:
+	if Input.is_action_pressed("shoot" + player_id) and _can_shoot and _ammo > 0:
 		_shoot()
 	
 	_calculate_rotation_inertia(yaw, pitch, delta)
@@ -70,9 +74,9 @@ func _physics_process(delta:float)->void:
 			death(true)
 			if collision.collider.has_method("death"):
 				collision.collider.death(true)
-	if secs_fuel > 0:
-		secs_fuel -= delta * _actual_speed / flight_speed
-		emit_signal("update_fuel", secs_fuel)
+	if _secs_fuel > 0:
+		_secs_fuel -= delta * _actual_speed / flight_speed
+		emit_signal("update_fuel", _secs_fuel)
 	elif gravity_mitigation > -20:
 		gravity_mitigation -= delta * 3
 		if rotation.x > -PI/4:
@@ -111,8 +115,8 @@ func _calculate_rotation_inertia(yaw:float, pitch:float, delta:float)->void:
 
 func _shoot()->void:
 	_can_shoot = false
-	ammo -= 1
-	emit_signal("update_ammo", ammo)
+	_ammo -= 1
+	emit_signal("update_ammo", _ammo)
 	
 	for object in $Body/FiringCone.get_overlapping_bodies():
 		if object.has_method("damage"):
@@ -124,20 +128,25 @@ func _shoot()->void:
 
 
 func damage(amount:int, attacker_id:int)->void:
-	health -= amount
-	if health <= 0:
+	_health -= amount
+	if _health <= 0:
+		dead = true
 		death()
 		emit_signal("dead", attacker_id)
-	emit_signal("update_health", health)
+	emit_signal("update_health", _health)
 
 
 func death(explode := false)->void:
-	secs_fuel = 0
-	ammo = 0
-	health = 0
-	emit_signal("update_ammo", ammo)
-	emit_signal("update_fuel", secs_fuel)
-	emit_signal("update_health", health)
+	_secs_fuel = 0
+	_ammo = 0
+	_health = 0
+	emit_signal("update_ammo", _ammo)
+	emit_signal("update_fuel", _secs_fuel)
+	emit_signal("update_health", _health)
+	
+	if not dead:
+		emit_signal("dead", -1)
+	dead = true
 	
 	if explode:
 		$Body.visible = false
@@ -153,9 +162,44 @@ func _set_color(value:Color)->void:
 	color = value
 	var material := ShaderMaterial.new()
 	material.shader = load("res://Plane/stripe_shader.gdshader")
-	material.set("shader_param/main_color",Vector3(color.r, color.g, color.b))
+	material.set("shader_param/main_color",Vector3(
+		color.r, color.g, color.b))
 	var stripe_color := Vector3.ONE - Vector3(color.r, color.g, color.b)
 	if stripe_color == Vector3.ONE:
 		stripe_color *= 0.99
 	material.set("shader_param/fin_color",stripe_color)
 	$Body.material = material
+
+
+func _on_PlaneHandler_upgrade(field_name:String)->void:
+	match field_name:
+		"speed":
+			flight_speed += 10.0
+			max_speed = flight_speed * 1.5
+			turn_speed *= 1.25
+		"fuel":
+			max_fuel += 10.0
+		"damage":
+			dps += 2.0
+		"ammo":
+			max_ammo += 5
+		"reload":
+			reload_time *= 0.75
+		"health":
+			max_health += 1
+		"manuverability":
+			accel_factor *= 1.25
+			deaccel_factor *= 1.25
+
+
+func restart()->void:
+	_actual_speed = flight_speed
+	_rotation_inertia = Vector3.ZERO
+	gravity_mitigation = 0.0
+	lift_factor = gravity / flight_speed
+	_health = max_health
+	_ammo = max_ammo
+	_secs_fuel = max_fuel
+	dead = false
+	$Body.visible = true
+	$CollisionShape.disabled = false

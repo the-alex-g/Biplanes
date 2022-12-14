@@ -45,7 +45,7 @@ func add_planes(new_players:int)->void:
 	
 	for player_id in players:
 		var plane_handler : PlaneHandler = load("res://Plane/PlaneHandler.tscn").instance()
-		var viewport : Viewport = get_node("Viewport" + str(player_id))
+		var viewport : Viewport = get_node("ViewportContainer/Viewport" + str(player_id))
 		
 		plane_handler.player_id = player_id
 		plane_handler.color = plane_colors[player_id]
@@ -64,7 +64,7 @@ func add_planes(new_players:int)->void:
 
 func _export_viewport_textures()->void:
 	for i in players:
-		var viewport : Viewport = get_node("Viewport" + str(i))
+		var viewport : Viewport = get_node("ViewportContainer/Viewport" + str(i))
 		emit_signal("export_viewport_texture", viewport.get_texture(), i)
 
 

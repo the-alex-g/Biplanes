@@ -21,17 +21,21 @@ half_ground_size = 600
 max_scenery = 120
 min_scenery = 90
 
-[node name="Viewport0" type="Viewport" parent="."]
+[node name="ViewportContainer" type="ViewportContainer" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="Viewport0" type="Viewport" parent="ViewportContainer"]
 size = Vector2( 1024, 600 )
 render_target_v_flip = true
 
-[node name="Viewport1" type="Viewport" parent="."]
+[node name="Viewport1" type="Viewport" parent="ViewportContainer"]
 render_target_v_flip = true
 
-[node name="Viewport2" type="Viewport" parent="."]
+[node name="Viewport2" type="Viewport" parent="ViewportContainer"]
 render_target_v_flip = true
 
-[node name="Viewport3" type="Viewport" parent="."]
+[node name="Viewport3" type="Viewport" parent="ViewportContainer"]
 render_target_v_flip = true
 
 [node name="MasterHUD" parent="." instance=ExtResource( 2 )]

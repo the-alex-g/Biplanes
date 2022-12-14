@@ -24,8 +24,6 @@ func _draw():
 	draw_circle(Vector2.ONE * draw_radius, pointer_length, Color.black)
 	draw_line(Vector2.ONE * draw_radius, Vector2.ONE * draw_radius + (Vector2.RIGHT * (pointer_length + 2)).rotated(direction + PI/2), Color.white, 2)
 	if points.size() > 0:
-		var points_to_draw : PoolVector2Array = []
-		var far_points : PoolVector2Array = []
 		for point in points:
 			if center_point.distance_squared_to(point) < scan_radius * scan_radius:
 				var target = Vector2(center_point.distance_to(point) * draw_radius / scan_radius, 0)

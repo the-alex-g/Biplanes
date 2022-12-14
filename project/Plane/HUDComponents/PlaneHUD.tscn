@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://Plane/PlaneHUD.gd" type="Script" id=1]
+[ext_resource path="res://Plane/HUDComponents/PlaneHUD.gd" type="Script" id=1]
 [ext_resource path="res://Plane/FiringRing.png" type="Texture" id=2]
 [ext_resource path="res://Radar/Radar.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Plane/HUDComponents/LevelUp.tscn" type="PackedScene" id=4]
 
 [node name="PlaneHUD" type="CanvasLayer"]
 script = ExtResource( 1 )
@@ -83,3 +84,9 @@ anchor_bottom = 0.0
 margin_top = 50.0
 margin_right = 1024.0
 margin_bottom = 600.0
+
+[node name="LevelUp" parent="Control" instance=ExtResource( 4 )]
+visible = false
+
+[connection signal="launch" from="Control/LevelUp" to="." method="_on_LevelUp_launch"]
+[connection signal="upgrade" from="Control/LevelUp" to="." method="_on_LevelUp_upgrade"]

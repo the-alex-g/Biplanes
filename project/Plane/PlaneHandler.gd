@@ -8,6 +8,9 @@ signal update_ammo(value)
 signal update_health(value)
 signal update_radar(from, points)
 signal plane_down(killer)
+signal upgrade(field_name)
+signal update_kills(value)
+signal setup_plane(id)
 
 export var camera_distance_from_plane := 50.0
 export var camera_vertical_offset := 15.0
@@ -26,11 +29,10 @@ var kills := 0
 
 
 func _ready()->void:
-	_plane.translation = (Vector3.RIGHT * 300).rotated(Vector3.UP, player_id * TAU / players)
-	_plane.translation.y = 50
-	_plane.rotation.y = player_id * TAU / players + PI / 2
 	_plane.player_id = "_" + str(player_id)
+	emit_signal("setup_plane", player_id)
 	_plane.color = color
+	_relocate_plane_to_start()
 	if players > 2:
 		_pilot_viewport.size /= 2
 
@@ -44,6 +46,13 @@ func _process(_delta:float)->void:
 	_camera.rotation.x = -atan(camera_vertical_offset / camera_distance_from_plane)
 	emit_signal("update_pilot_view", _pilot_viewport.get_texture())
 	emit_signal("update_altitude", _get_plane_position().y)
+
+
+func _relocate_plane_to_start()->void:
+	active = true
+	_plane.translation = (Vector3.RIGHT * 300).rotated(Vector3.UP, player_id * TAU / players)
+	_plane.translation.y = 50
+	_plane.rotation = Vector3(0, player_id * TAU / players + PI / 2, 0)
 
 
 func _to_vec2(from:Vector3)->Vector2:
@@ -87,4 +96,14 @@ func _on_Biplane_dead(killer_id:int)->void:
 
 func score()->void:
 	kills += 1
-	print("YAY")
+	emit_signal("update_kills", kills)
+
+
+func _on_PlaneHUD_upgrade(field_name:String)->void:
+	emit_signal("upgrade", field_name)
+
+
+func _on_PlaneHUD_launch()->void:
+	_relocate_plane_to_start()
+	kills = 0
+	_plane.restart()

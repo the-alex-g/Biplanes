@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Plane/Biplane.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Plane/PlaneHandler.gd" type="Script" id=2]
-[ext_resource path="res://Plane/PlaneHUD.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Plane/HUDComponents/PlaneHUD.tscn" type="PackedScene" id=3]
 
 [node name="PlaneHandler" type="Spatial"]
 script = ExtResource( 2 )
@@ -20,13 +20,19 @@ far = 1000.0
 
 [node name="PlaneHUD" parent="." instance=ExtResource( 3 )]
 
+[connection signal="plane_down" from="." to="PlaneHUD" method="_on_PlaneHandler_plane_down"]
+[connection signal="setup_plane" from="." to="PlaneHUD" method="_on_PlaneHandler_setup_plane"]
 [connection signal="update_altitude" from="." to="PlaneHUD" method="_on_PlaneHandler_update_altitude"]
 [connection signal="update_ammo" from="." to="PlaneHUD" method="_on_PlaneHandler_update_ammo"]
 [connection signal="update_fuel" from="." to="PlaneHUD" method="_on_PlaneHandler_update_fuel"]
 [connection signal="update_health" from="." to="PlaneHUD" method="_on_PlaneHandler_update_health"]
+[connection signal="update_kills" from="." to="PlaneHUD" method="_on_PlaneHandler_update_kills"]
 [connection signal="update_pilot_view" from="." to="PlaneHUD" method="_on_PlaneHandler_update_pilot_view"]
 [connection signal="update_radar" from="." to="PlaneHUD" method="_on_PlaneHandler_update_radar"]
+[connection signal="upgrade" from="." to="Biplane" method="_on_PlaneHandler_upgrade"]
 [connection signal="dead" from="Biplane" to="." method="_on_Biplane_dead"]
 [connection signal="update_ammo" from="Biplane" to="." method="_on_Biplane_update_ammo"]
 [connection signal="update_fuel" from="Biplane" to="." method="_on_Biplane_update_fuel"]
 [connection signal="update_health" from="Biplane" to="." method="_on_Biplane_update_health"]
+[connection signal="launch" from="PlaneHUD" to="." method="_on_PlaneHUD_launch"]
+[connection signal="upgrade" from="PlaneHUD" to="." method="_on_PlaneHUD_upgrade"]
