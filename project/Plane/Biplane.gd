@@ -205,6 +205,8 @@ func _on_PlaneHandler_upgrade(field_name:String)->void:
 			deaccel_factor *= 1.25
 		"range":
 			_set_range(gun_range + 10)
+		"targeter":
+			range_finder = true
 
 
 func _set_range(value:float)->void:

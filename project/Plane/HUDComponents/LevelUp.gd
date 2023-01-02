@@ -7,12 +7,6 @@ signal upgrade(field)
 enum OptionSets {MAIN, ENGINES, GUNS, FRAME}
 
 const BUTTON_MAPS := {"A":0, "B":1, "X":2, "Y":3, "Back":10}
-const UPGRADE_FIELDS := [
-	["Engines", "Guns", "Frame", "", "Launch"],
-	["speed", "fuel", "", "", "Back"],
-	["damage", "ammo", "reload", "range", "Back"],
-	["health", "manuverability", "", "", "Back"],
-]
 
 onready var option_text_1 : Label = $VBoxContainer/Option1/Text
 onready var option_text_2 : Label = $VBoxContainer/Option2/Text
@@ -29,8 +23,14 @@ var _menu : int = OptionSets.MAIN setget _set_menu
 var _costs := {
 	"speed":10, "fuel":10,
 	"damage":10, "ammo":10, "reload":5, "range":10,
-	"health":15, "manuverability":10, "new plane":-20
+	"health":15, "manuverability":10, "targeter":15, "new plane":-20
 }
+var _upgrade_fields := [
+	["Engines", "Guns", "Frame", "", "Launch"],
+	["speed", "fuel", "", "", "Back"],
+	["damage", "ammo", "reload", "range", "Back"],
+	["health", "manuverability", "targeter", "", "Back"],
+]
 
 
 func _ready()->void:
@@ -82,7 +82,9 @@ func _input(event:InputEvent)->void:
 							BUTTON_MAPS.X:
 								_upgrade("manuverability")
 							BUTTON_MAPS.Y:
-								_upgrade("new plane")
+								_upgrade_fields[3][2] = ""
+								_upgrade("targeter")
+								
 							BUTTON_MAPS.Back:
 								_set_menu(OptionSets.MAIN)
 
@@ -90,7 +92,7 @@ func _input(event:InputEvent)->void:
 func _set_menu(value:int)->void:
 	_menu = value
 	for i in 5:
-		var field_name : String = UPGRADE_FIELDS[value][i]
+		var field_name : String = _upgrade_fields[value][i]
 		if field_name != "":
 			var text := field_name.capitalize()
 			if field_name != "Back" and field_name != "Launch" and _menu != OptionSets.MAIN:
