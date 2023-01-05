@@ -1,7 +1,9 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Plane/Biplane.gd" type="Script" id=1]
 [ext_resource path="res://Plane/Meshes/Biplane.obj" type="ArrayMesh" id=2]
+[ext_resource path="res://Sound/VariableStreamPlayer.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Sound/SFX/Shoot.wav" type="AudioStream" id=4]
 
 [sub_resource type="BoxShape" id=3]
 extents = Vector3( 1.75, 1, 4 )
@@ -54,3 +56,6 @@ mesh = SubResource( 4 )
 spread = 180.0
 gravity = Vector3( 0, 0, 0 )
 initial_velocity = 4.0
+
+[node name="ShootPlayer" parent="." instance=ExtResource( 3 )]
+stream = ExtResource( 4 )

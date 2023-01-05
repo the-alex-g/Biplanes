@@ -37,6 +37,7 @@ var dead := false
 var range_finder := false
 
 onready var _reload_timer : Timer = $ReloadTimer
+onready var _shoot_player : VariableStreamPlayer = $ShootPlayer
 
 
 func _physics_process(delta:float)->void:
@@ -127,6 +128,7 @@ func _check_range()->bool:
 
 
 func _shoot()->void:
+	_shoot_player.play()
 	_can_shoot = false
 	_ammo -= 1
 	emit_signal("update_ammo", _ammo)
