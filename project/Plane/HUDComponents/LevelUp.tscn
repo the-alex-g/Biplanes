@@ -126,3 +126,10 @@ margin_top = 9.0
 margin_right = 90.0
 margin_bottom = 23.0
 text = "LAUNCH"
+
+[node name="Label" type="Label" parent="."]
+margin_left = 29.0
+margin_right = 282.0
+margin_bottom = 54.0
+text = "Advanced Flight: Disabled"
+valign = 1

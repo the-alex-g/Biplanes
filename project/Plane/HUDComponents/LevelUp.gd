@@ -18,6 +18,7 @@ onready var resources_label : Label = $VBoxContainer/Label
 export var disabled := false
 
 var id := 0
+var _advanced_flight := false
 var resources := 0 setget _set_resources
 var _menu : int = OptionSets.MAIN setget _set_menu
 var _costs := {
@@ -90,11 +91,12 @@ func _input(event:InputEvent)->void:
 					OptionSets.SPECIAL:
 						match event.button_index:
 							BUTTON_MAPS.A:
+								_upgrade_fields[4][0] = ""
 								_upgrade("auto_right")
 							BUTTON_MAPS.X:
 								_upgrade("advanced_flight")
 							BUTTON_MAPS.Y:
-								_upgrade_fields[3][2] = ""
+								_upgrade_fields[4][2] = ""
 								_upgrade("targeter")
 							BUTTON_MAPS.Back:
 								_set_menu(OptionSets.MAIN)
@@ -123,6 +125,9 @@ func _upgrade(field:String)->void:
 			_set_resources(resources - cost)
 			if field != "advanced_flight":
 				_costs[field] += 5
+			else:
+				_advanced_flight = ! _advanced_flight
+				$Label.text = "Advanced Flight: " + ("Enabled" if _advanced_flight else "Disabled")
 			emit_signal("upgrade", field)
 			_set_menu(_menu)
 
