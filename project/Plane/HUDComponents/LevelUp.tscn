@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Plane/HUDComponents/ControllerButtons.png" type="Texture" id=1]
 [ext_resource path="res://Plane/HUDComponents/LevelUp.gd" type="Script" id=2]
+[ext_resource path="res://Resources/theme.tres" type="Theme" id=3]
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 1 )
@@ -26,6 +27,7 @@ region = Rect2( 0, 64, 32, 32 )
 [node name="LevelUp" type="Panel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = ExtResource( 3 )
 script = ExtResource( 2 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
@@ -33,19 +35,19 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -45.0
-margin_top = -70.0
-margin_right = 45.0
-margin_bottom = 70.0
+margin_left = -49.0
+margin_top = -100.5
+margin_right = 49.0
+margin_bottom = 100.5
 
 [node name="Label" type="Label" parent="VBoxContainer"]
-margin_right = 90.0
-margin_bottom = 14.0
+margin_right = 98.0
+margin_bottom = 21.0
 
 [node name="Option1" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 18.0
-margin_right = 90.0
-margin_bottom = 50.0
+margin_top = 25.0
+margin_right = 98.0
+margin_bottom = 57.0
 
 [node name="A" type="TextureRect" parent="VBoxContainer/Option1"]
 margin_right = 32.0
@@ -54,15 +56,15 @@ texture = SubResource( 1 )
 
 [node name="Text" type="Label" parent="VBoxContainer/Option1"]
 margin_left = 36.0
-margin_top = 9.0
-margin_right = 85.0
-margin_bottom = 23.0
-text = "Engines"
+margin_top = 5.0
+margin_right = 98.0
+margin_bottom = 26.0
+text = "engines"
 
 [node name="Option2" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 54.0
-margin_right = 90.0
-margin_bottom = 86.0
+margin_top = 61.0
+margin_right = 98.0
+margin_bottom = 93.0
 
 [node name="X" type="TextureRect" parent="VBoxContainer/Option2"]
 margin_right = 32.0
@@ -71,15 +73,15 @@ texture = SubResource( 2 )
 
 [node name="Text" type="Label" parent="VBoxContainer/Option2"]
 margin_left = 36.0
-margin_top = 9.0
-margin_right = 69.0
-margin_bottom = 23.0
-text = "Guns"
+margin_top = 5.0
+margin_right = 74.0
+margin_bottom = 26.0
+text = "guns"
 
 [node name="Option3" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 90.0
-margin_right = 90.0
-margin_bottom = 122.0
+margin_top = 97.0
+margin_right = 98.0
+margin_bottom = 129.0
 
 [node name="Y" type="TextureRect" parent="VBoxContainer/Option3"]
 margin_right = 32.0
@@ -88,15 +90,15 @@ texture = SubResource( 3 )
 
 [node name="Text" type="Label" parent="VBoxContainer/Option3"]
 margin_left = 36.0
-margin_top = 9.0
-margin_right = 76.0
-margin_bottom = 23.0
-text = "Frame"
+margin_top = 5.0
+margin_right = 83.0
+margin_bottom = 26.0
+text = "frame"
 
 [node name="Option4" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 126.0
-margin_right = 90.0
-margin_bottom = 158.0
+margin_top = 133.0
+margin_right = 98.0
+margin_bottom = 165.0
 
 [node name="B" type="TextureRect" parent="VBoxContainer/Option4"]
 margin_right = 32.0
@@ -105,15 +107,15 @@ texture = SubResource( 5 )
 
 [node name="Text" type="Label" parent="VBoxContainer/Option4"]
 margin_left = 36.0
-margin_top = 9.0
-margin_right = 90.0
-margin_bottom = 23.0
-text = "LAUNCH"
+margin_top = 5.0
+margin_right = 95.0
+margin_bottom = 26.0
+text = "launch"
 
 [node name="Option5" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 162.0
-margin_right = 90.0
-margin_bottom = 194.0
+margin_top = 169.0
+margin_right = 98.0
+margin_bottom = 201.0
 
 [node name="Back" type="TextureRect" parent="VBoxContainer/Option5"]
 margin_right = 32.0
@@ -122,14 +124,15 @@ texture = SubResource( 4 )
 
 [node name="Text" type="Label" parent="VBoxContainer/Option5"]
 margin_left = 36.0
-margin_top = 9.0
-margin_right = 90.0
-margin_bottom = 23.0
-text = "LAUNCH"
+margin_top = 5.0
+margin_right = 95.0
+margin_bottom = 26.0
+text = "launch"
 
 [node name="Label" type="Label" parent="."]
-margin_left = 29.0
-margin_right = 282.0
-margin_bottom = 54.0
-text = "Advanced Flight: Disabled"
+margin_left = 43.0
+margin_top = 15.0
+margin_right = 296.0
+margin_bottom = 69.0
+text = "advanced flight: disabled"
 valign = 1

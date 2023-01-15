@@ -28,11 +28,11 @@ var _costs := {
 	"auto_right":10, "advanced_flight":0
 }
 var _upgrade_fields := [
-	["Engines", "Guns", "Frame", "Special", "Launch"],
-	["speed", "fuel", "", "", "Back"],
-	["damage", "ammo", "reload", "range", "Back"],
-	["health", "manuverability", "", "", "Back"],
-	["auto_right", "advanced_flight", "targeter", "", "Back"],
+	["engines", "guns", "frame", "special", "launch"],
+	["speed", "fuel", "", "", "back"],
+	["damage", "ammo", "reload", "range", "back"],
+	["health", "manuverability", "", "", "back"],
+	["auto_right", "advanced_flight", "targeter", "", "back"],
 ]
 
 
@@ -107,8 +107,8 @@ func _set_menu(value:int)->void:
 	for i in 5:
 		var field_name : String = _upgrade_fields[value][i]
 		if field_name != "":
-			var text := field_name.capitalize()
-			if field_name != "Back" and field_name != "Launch" and _menu != OptionSets.MAIN:
+			var text := field_name
+			if field_name != "back" and field_name != "launch" and _menu != OptionSets.MAIN:
 				text += ": " + str(_costs[field_name])
 			get("option_text_" + str(i + 1)).text = text
 			get_node("VBoxContainer/Option" + str(i+1)).visible = true
@@ -127,7 +127,7 @@ func _upgrade(field:String)->void:
 				_costs[field] += 5
 			else:
 				_advanced_flight = ! _advanced_flight
-				$Label.text = "Advanced Flight: " + ("Enabled" if _advanced_flight else "Disabled")
+				$Label.text = "advanced flight: " + ("enabled" if _advanced_flight else "disabled")
 			emit_signal("upgrade", field)
 			_set_menu(_menu)
 

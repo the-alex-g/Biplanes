@@ -4,8 +4,7 @@
 [ext_resource path="res://Menu/JoinWidget.gd" type="Script" id=2]
 
 [node name="JoinWidget" type="TextureRect"]
-modulate = Color( 1, 1, 1, 0 )
-margin_right = 40.0
-margin_bottom = 40.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
 texture = ExtResource( 1 )
 script = ExtResource( 2 )

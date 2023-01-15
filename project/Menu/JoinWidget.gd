@@ -15,6 +15,11 @@ var color := Color(0,0,0,0) setget _set_color
 var _joined := false
 
 
+func _ready()->void:
+	# make sure it's invisible for game start
+	modulate = Color(1, 1, 1, 0)
+
+
 func _input(event:InputEvent)->void:
 	if event is InputEventJoypadButton:
 		if event.device == id:
