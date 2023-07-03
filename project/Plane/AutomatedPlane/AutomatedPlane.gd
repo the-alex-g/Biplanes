@@ -62,6 +62,7 @@ func death(explode := false)->void:
 		emit_signal("dead", -1)
 	
 	dead = true
+	$CPUParticles.emitting = true
 	
 	health = 0
 	gravity_mitigation = 0
@@ -69,5 +70,6 @@ func death(explode := false)->void:
 	if explode:
 		$Body.visible = false
 		$ExplosionParticles.emitting = true
-		yield(get_tree().create_timer($ExplosionParticles.lifetime), "timeout")
+		$CPUParticles.emitting = false
+		yield(get_tree().create_timer($CPUParticles.lifetime), "timeout")
 		queue_free()

@@ -162,6 +162,7 @@ func damage(amount:int, attacker_id:int)->void:
 	if _health <= 0:
 		dead = true
 		death()
+		$SmokeParticles.emitting = true
 		emit_signal("dead", attacker_id)
 	emit_signal("update_health", _health)
 
@@ -181,6 +182,7 @@ func death(explode := false)->void:
 	if explode:
 		$Body.visible = false
 		$ExplosionParticles.emitting = true
+		$SmokeParticles.emitting = false
 		$CollisionShape.disabled = true
 
 
