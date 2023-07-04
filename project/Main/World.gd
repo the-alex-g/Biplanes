@@ -3,6 +3,7 @@ extends Spatial
 signal export_viewport_texture(texture, port)
 
 export var half_ground_size := 300
+export var ground_height := 50.0
 export var max_scenery := 50
 export var min_scenery := 40
 export var margin := 25
@@ -11,16 +12,19 @@ var players := 0 setget _set_players
 var plane_colors := {}
 var _plane_handlers := []
 
-onready var _ground := $Ground
-onready var _ground_mesh := $Ground/CSGBox
+onready var _ground : StaticBody = $Ground
+onready var _ground_mesh : MeshInstance = $Ground/Ground
 onready var _ground_collision := $Ground/CollisionShape
 
 
 func _ready()->void:
 	randomize()
-	_ground_collision.shape.extents = Vector3(half_ground_size, 0.005, half_ground_size)
-	_ground_mesh.width = half_ground_size * 2
-	_ground_mesh.depth = half_ground_size * 2
+	_ground_mesh.set("shader_param/noise/noise/seed", randi())
+	_ground_mesh.mesh.size = Vector2(half_ground_size, half_ground_size) * 2
+	var noise := OpenSimplexNoise.new()
+	noise.seed = randi()
+	_create_ground_collision(noise)
+	_create_ground_mesh(noise)
 	_generate_scenery()
 	_spawn_auto_plane()
 
@@ -38,6 +42,35 @@ func _process(_delta:float)->void:
 			if not plane.dead:
 				points.append(plane.global_translation)
 		plane_handler_1.update_radar_points(points)
+
+
+func _create_ground_collision(noise:OpenSimplexNoise)->void:
+	var mesh_faces := _ground_mesh.mesh.get_faces()
+	var new_faces : PoolVector3Array = []
+	for vertex in mesh_faces:
+		new_faces.append(Vector3(
+			vertex.x,
+			noise.get_noise_2d(vertex.x, vertex.z) * ground_height,
+			vertex.z
+		))
+	var shape := ConcavePolygonShape.new()
+	shape.set_faces(new_faces)
+	_ground_collision.shape = shape
+
+
+func _create_ground_mesh(noise:OpenSimplexNoise)->void:
+	var surface := _ground_mesh.mesh.surface_get_arrays(0)
+	var mesh := ArrayMesh.new()
+	var new_verticies : PoolVector3Array = []
+	for vertex in surface[ArrayMesh.ARRAY_VERTEX]:
+		new_verticies.append(Vector3(
+			vertex.x,
+			noise.get_noise_2d(vertex.x, vertex.z) * ground_height,
+			vertex.z
+		))
+	surface[ArrayMesh.ARRAY_VERTEX] = new_verticies
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, surface)
+	_ground_mesh.mesh = mesh
 
 
 func add_planes(new_players:int)->void:
