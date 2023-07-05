@@ -32,8 +32,10 @@ var _upgrade_fields := [
 	["speed", "fuel", "", "", "back"],
 	["damage", "ammo", "reload", "range", "back"],
 	["health", "manuverability", "", "", "back"],
-	["auto_right", "advanced_flight", "targeter", "", "back"],
+	["auto_right", "advanced_flight", "targeter", "new plane", "back"],
 ]
+
+onready var _starting_costs := _costs.duplicate()
 
 
 func _ready()->void:
@@ -98,6 +100,8 @@ func _input(event:InputEvent)->void:
 							BUTTON_MAPS.Y:
 								_upgrade_fields[4][2] = ""
 								_upgrade("targeter")
+							BUTTON_MAPS.B:
+								_reset()
 							BUTTON_MAPS.Back:
 								_set_menu(OptionSets.MAIN)
 
@@ -119,9 +123,7 @@ func _set_menu(value:int)->void:
 func _upgrade(field:String)->void:
 	var cost : int = _costs[field]
 	if field != "":
-		if field == "new plane":
-			pass
-		elif resources >= cost:
+		if resources >= cost:
 			_set_resources(resources - cost)
 			if field != "advanced_flight":
 				_costs[field] += 5
@@ -135,3 +137,13 @@ func _upgrade(field:String)->void:
 func _set_resources(value:int)->void:
 	resources = value
 	resources_label.text = "Resources: " + str(resources)
+
+
+func _reset()->void:
+	for field in _costs:
+		_costs[field] = _starting_costs[field]
+	_advanced_flight = false
+	_upgrade_fields[4][0] = "auto_right"
+	_upgrade_fields[4][2] = "targeter"
+	emit_signal("upgrade", "reset")
+	_set_menu(_menu)

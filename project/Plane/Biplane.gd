@@ -221,7 +221,7 @@ func _on_PlaneHandler_upgrade(field_name:String)->void:
 		"reload":
 			reload_time *= 0.75
 		"health":
-			max_health += 1
+			max_health += 5
 		"manuverability":
 			accel_factor *= 1.25
 			deaccel_factor *= 1.25
@@ -233,6 +233,25 @@ func _on_PlaneHandler_upgrade(field_name:String)->void:
 			advanced_flight = ! advanced_flight
 		"auto_right":
 			auto_right = true
+		"reset":
+			_reset_upgrades()
+
+
+func _reset_upgrades()->void:
+	range_finder = false
+	advanced_flight = false
+	auto_right = false
+	flight_speed = 30.0
+	turn_speed = 1.0
+	max_speed = 45.0
+	reload_time = 0.2
+	dps = 10.0
+	max_health = 60.0
+	max_fuel = 120.0
+	max_ammo = 20
+	_set_range(100.0)
+	accel_factor = 1.6
+	deaccel_factor = 1.2
 
 
 func _set_range(value:float)->void:
@@ -264,3 +283,4 @@ func restart()->void:
 	dead = false
 	$Body.visible = true
 	$CollisionShape.disabled = false
+	$SmokeParticles.emitting = false

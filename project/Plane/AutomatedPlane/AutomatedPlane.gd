@@ -3,7 +3,7 @@ extends KinematicBody
 
 signal dead(killer_id)
 
-var health := 45
+var health := 1#45
 var direction : float = PI / 4
 var speed := 25.0
 var dead := false
@@ -36,8 +36,10 @@ func _physics_process(delta:float)->void:
 			rotation.z = 0.0
 		else:
 			rotation.x = PI / 3
+	movement_vector = movement_vector.normalized() * speed
+	movement_vector.y -= (gravity - gravity_mitigation)
 	
-	var collision := move_and_collide(movement_vector.normalized() * delta * speed)
+	var collision := move_and_collide(movement_vector * delta)
 	
 	if collision != null:
 		death(true)
@@ -86,6 +88,7 @@ func death(explode := false)->void:
 func _on_Area_body_entered(body:PhysicsBody)->void:
 	if body is Biplane and _target == null and not dead:
 		_target = body
+		# warning-ignore:return_value_discarded
 		_target.connect("dead", self, "_on_target_dead", [], CONNECT_ONESHOT)
 
 

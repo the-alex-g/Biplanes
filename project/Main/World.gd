@@ -61,15 +61,18 @@ func _create_ground_collision(noise:OpenSimplexNoise)->void:
 func _create_ground_mesh(noise:OpenSimplexNoise)->void:
 	var surface := _ground_mesh.mesh.surface_get_arrays(0)
 	var mesh := ArrayMesh.new()
-	
+	var new_normals : PoolVector3Array = []
 	var new_verticies : PoolVector3Array = []
 	for vertex in surface[ArrayMesh.ARRAY_VERTEX]:
-		new_verticies.append(Vector3(
+		var new_vertex := Vector3(
 			vertex.x,
 			noise.get_noise_2d(vertex.x, vertex.z) * ground_height,
 			vertex.z
-		))
+		)
+		new_verticies.append(new_vertex)
+		new_normals.append(new_vertex)
 	surface[ArrayMesh.ARRAY_VERTEX] = new_verticies
+	surface[ArrayMesh.ARRAY_NORMAL] = new_normals
 	
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, surface)
 	

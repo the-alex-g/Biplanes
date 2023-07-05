@@ -17,7 +17,8 @@ var _joined := false
 
 func _ready()->void:
 	# make sure it's invisible for game start
-	modulate = Color(1, 1, 1, 0)
+	self_modulate = Color(1, 1, 1, 0)
+	$Checkmark.visible = false
 
 
 func _input(event:InputEvent)->void:
@@ -32,7 +33,7 @@ func _input(event:InputEvent)->void:
 							emit_signal("player_joined", id)
 						elif _joined and not ready:
 							ready = true
-							modulate = Color.aqua
+							$Checkmark.visible = true
 							emit_signal("player_ready")
 					BUTTON_MAPS.B:
 						if _joined and not ready:
@@ -41,7 +42,7 @@ func _input(event:InputEvent)->void:
 							emit_signal("player_left", id)
 						elif _joined and ready:
 							ready = false
-							modulate = color
+							$Checkmark.visible = false
 							emit_signal("player_not_ready")
 					BUTTON_MAPS.LEFT_SHOULDER:
 						if _joined and not ready:
@@ -52,5 +53,5 @@ func _input(event:InputEvent)->void:
 
 
 func _set_color(value:Color)->void:
-	modulate = value
+	self_modulate = value
 	color = value
