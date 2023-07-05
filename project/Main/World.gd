@@ -61,6 +61,7 @@ func _create_ground_collision(noise:OpenSimplexNoise)->void:
 func _create_ground_mesh(noise:OpenSimplexNoise)->void:
 	var surface := _ground_mesh.mesh.surface_get_arrays(0)
 	var mesh := ArrayMesh.new()
+	
 	var new_verticies : PoolVector3Array = []
 	for vertex in surface[ArrayMesh.ARRAY_VERTEX]:
 		new_verticies.append(Vector3(
@@ -69,7 +70,13 @@ func _create_ground_mesh(noise:OpenSimplexNoise)->void:
 			vertex.z
 		))
 	surface[ArrayMesh.ARRAY_VERTEX] = new_verticies
+	
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, surface)
+	
+	var material := SpatialMaterial.new()
+	material.albedo_color = Color.forestgreen
+	mesh.surface_set_material(0, material)
+	
 	_ground_mesh.mesh = mesh
 
 

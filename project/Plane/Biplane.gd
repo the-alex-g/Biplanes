@@ -32,6 +32,7 @@ var _ammo := 20
 var _rotation_inertia := Vector3.ZERO
 var _actual_speed := flight_speed
 var _can_shoot := true
+var altitude : float setget , _get_altitude
 var player_id := ""
 var color : Color setget _set_color
 var dead := false
@@ -99,6 +100,8 @@ func _physics_process(delta:float)->void:
 	
 	if range_finder:
 		emit_signal("can_hit", _check_range())
+	
+	$GroundDetector.global_rotation = Vector3.ZERO
 
 
 func _calculate_rotation_inertia(yaw:float, pitch:float, roll:float, delta:float)->void:
@@ -243,6 +246,11 @@ func _set_range(value:float)->void:
 		Vector3(spread, gun_range, -spread)
 	]
 	$Body/FiringCone/CollisionShape.shape.points = shape
+
+
+func _get_altitude()->float:
+	var ground_position : Vector3 = $GroundDetector.get_collision_point()
+	return global_translation.y - ground_position.y
 
 
 func restart()->void:

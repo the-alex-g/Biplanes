@@ -46,7 +46,7 @@ func _process(_delta:float)->void:
 	)
 	_camera.rotation.x = -atan(camera_vertical_offset / camera_distance_from_plane)
 	emit_signal("update_pilot_view", _pilot_viewport.get_texture())
-	emit_signal("update_altitude", _get_plane_position().y)
+	emit_signal("update_altitude", _plane.altitude)
 
 
 func _relocate_plane_to_start()->void:

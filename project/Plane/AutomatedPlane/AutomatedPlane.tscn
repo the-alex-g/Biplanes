@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Plane/Meshes/Biplane.obj" type="ArrayMesh" id=1]
 [ext_resource path="res://Plane/AutomatedPlane/AutomatedPlane.gd" type="Script" id=2]
@@ -30,6 +30,9 @@ material = SubResource( 9 )
 
 [sub_resource type="Curve" id=8]
 _data = [ Vector2( 0, 0.2875 ), 0.0, 0.0, 0, 0, Vector2( 0.727273, 0.9875 ), 0.0, 0.0, 0, 0, Vector2( 0.727273, 0.9875 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.760227 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="SphereShape" id=10]
+radius = 100.0
 
 [node name="AutomatedPlane" type="KinematicBody"]
 script = ExtResource( 2 )
@@ -82,3 +85,15 @@ spread = 30.0
 gravity = Vector3( 0, 0, 0 )
 initial_velocity = 4.0
 scale_amount_curve = SubResource( 8 )
+
+[node name="Area" type="Area" parent="."]
+
+[node name="CollisionShape" type="CollisionShape" parent="Area"]
+shape = SubResource( 10 )
+
+[node name="AimingWidget" type="Spatial" parent="."]
+
+[connection signal="body_entered" from="Body/FiringCone" to="." method="_on_FiringCone_body_entered"]
+[connection signal="body_exited" from="Body/FiringCone" to="." method="_on_FiringCone_body_exited"]
+[connection signal="timeout" from="ReloadTimer" to="." method="_on_ReloadTimer_timeout"]
+[connection signal="body_entered" from="Area" to="." method="_on_Area_body_entered"]

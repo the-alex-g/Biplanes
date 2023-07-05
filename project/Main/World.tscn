@@ -5,6 +5,7 @@
 [ext_resource path="res://Sound/Music/MainLoop.ogg" type="AudioStream" id=3]
 
 [sub_resource type="PlaneMesh" id=7]
+size = Vector2( 600, 600 )
 subdivide_width = 32
 subdivide_depth = 32
 
@@ -90,9 +91,5 @@ shape = SubResource( 4 )
 stream = ExtResource( 3 )
 autoplay = true
 bus = "Music"
-
-[node name="OmniLight" type="DirectionalLight" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 78.4435, 75.4425, -32.9728 )
-light_energy = 0.5
 
 [connection signal="export_viewport_texture" from="." to="MasterHUD" method="_on_World_export_viewport_texture"]
