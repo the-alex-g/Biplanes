@@ -1,10 +1,40 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Menu/PlayerBanner.png" type="Texture" id=1]
 [ext_resource path="res://Menu/JoinWidget.gd" type="Script" id=2]
 [ext_resource path="res://Resources/checkmark.png" type="Texture" id=3]
+[ext_resource path="res://Plane/HUDComponents/ControllerButtons.png" type="Texture" id=4]
+
+[sub_resource type="Shader" id=2]
+code = "shader_type canvas_item;
+
+uniform vec4 new_color = vec4(0.0, 0.0, 0.0, 0.1);
+uniform bool enabled = true;
+
+
+void fragment() {
+	COLOR = texture(TEXTURE, UV);
+	if (COLOR.a > 0.0 && COLOR.rgb != vec3(0.0, 0.0, 0.0) && enabled) {
+		COLOR = new_color;
+	}
+}"
+
+[sub_resource type="ShaderMaterial" id=3]
+resource_local_to_scene = true
+shader = SubResource( 2 )
+shader_param/new_color = Plane( 0, 0, 0, 0.1 )
+shader_param/enabled = true
+
+[sub_resource type="AtlasTexture" id=1]
+atlas = ExtResource( 4 )
+region = Rect2( 32, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=4]
+atlas = ExtResource( 4 )
+region = Rect2( 0, 32, 32, 32 )
 
 [node name="JoinWidget" type="TextureRect"]
+material = SubResource( 3 )
 anchor_bottom = 1.0
 margin_right = 131.0
 margin_bottom = -147.0
@@ -20,3 +50,25 @@ margin_right = 132.0
 margin_bottom = 43.5
 size_flags_horizontal = 0
 texture = ExtResource( 3 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_left = -10.0
+margin_top = 346.0
+margin_right = 140.0
+margin_bottom = 454.0
+alignment = 1
+
+[node name="AButton" type="TextureRect" parent="HBoxContainer"]
+margin_left = 59.0
+margin_right = 91.0
+margin_bottom = 108.0
+texture = SubResource( 1 )
+stretch_mode = 4
+
+[node name="BButton" type="TextureRect" parent="HBoxContainer"]
+visible = false
+margin_left = 77.0
+margin_right = 109.0
+margin_bottom = 108.0
+texture = SubResource( 4 )
+stretch_mode = 4

@@ -1,9 +1,47 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Menu/JoinMenu.gd" type="Script" id=1]
 [ext_resource path="res://Menu/JoinWidget.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Resources/theme.tres" type="Theme" id=3]
 [ext_resource path="res://Resources/large_font.tres" type="DynamicFont" id=4]
+
+[sub_resource type="Shader" id=2]
+code = "shader_type canvas_item;
+
+uniform vec4 new_color = vec4(0.0, 0.0, 0.0, 0.1);
+uniform bool enabled = true;
+
+
+void fragment() {
+	COLOR = texture(TEXTURE, UV);
+	if (COLOR.a > 0.0 && COLOR.rgb != vec3(0.0, 0.0, 0.0) && enabled) {
+		COLOR = new_color;
+	}
+}"
+
+[sub_resource type="ShaderMaterial" id=3]
+resource_local_to_scene = true
+shader = SubResource( 2 )
+shader_param/new_color = Plane( 0, 0, 0, 0.1 )
+shader_param/enabled = true
+
+[sub_resource type="ShaderMaterial" id=4]
+resource_local_to_scene = true
+shader = SubResource( 2 )
+shader_param/new_color = Plane( 0, 0, 0, 0.1 )
+shader_param/enabled = true
+
+[sub_resource type="ShaderMaterial" id=5]
+resource_local_to_scene = true
+shader = SubResource( 2 )
+shader_param/new_color = Plane( 0, 0, 0, 0.1 )
+shader_param/enabled = true
+
+[sub_resource type="ShaderMaterial" id=6]
+resource_local_to_scene = true
+shader = SubResource( 2 )
+shader_param/new_color = Plane( 0, 0, 0, 0.1 )
+shader_param/enabled = true
 
 [node name="JoinMenu" type="Control"]
 anchor_right = 1.0
@@ -41,11 +79,13 @@ margin_right = -85.0
 alignment = 1
 
 [node name="JoinWidget" parent="HBoxContainer" instance=ExtResource( 2 )]
+material = SubResource( 3 )
 anchor_bottom = 0.0
 margin_right = 237.0
 margin_bottom = 482.0
 
 [node name="JoinWidget2" parent="HBoxContainer" instance=ExtResource( 2 )]
+material = SubResource( 4 )
 anchor_bottom = 0.0
 margin_left = 241.0
 margin_right = 478.0
@@ -53,6 +93,7 @@ margin_bottom = 482.0
 id = 1
 
 [node name="JoinWidget3" parent="HBoxContainer" instance=ExtResource( 2 )]
+material = SubResource( 5 )
 anchor_bottom = 0.0
 margin_left = 482.0
 margin_right = 719.0
@@ -60,6 +101,7 @@ margin_bottom = 482.0
 id = 2
 
 [node name="JoinWidget4" parent="HBoxContainer" instance=ExtResource( 2 )]
+material = SubResource( 6 )
 anchor_bottom = 0.0
 margin_left = 723.0
 margin_right = 854.0

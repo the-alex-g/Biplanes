@@ -100,9 +100,8 @@ func _on_plane_joined(id:int)->void:
 
 func _on_plane_left(id:int)->void:
 	_planes_joined.erase(id)
-# warning-ignore:return_value_discarded
+	# warning-ignore:return_value_discarded
 	_plane_colors.erase(id)
-	_join_widgets[id].color = Color(0,0,0,0)
 
 
 func _on_plane_ready()->void:
