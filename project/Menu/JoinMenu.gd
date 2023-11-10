@@ -40,7 +40,7 @@ func _input(event:InputEvent)->void:
 				var world : Spatial = preload("res://Main/World.tscn").instance()
 				get_tree().root.add_child(world)
 				world.set_deferred("plane_colors", _plane_colors)
-				world.set_deferred("players", _planes_joined.size())
+				world.set_deferred("players", _planes_joined)
 				queue_free()
 			else:
 				_buffer = false
