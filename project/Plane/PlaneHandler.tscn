@@ -14,25 +14,22 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 50, 0 )
 size = Vector2( 256, 150 )
 render_target_v_flip = true
 
-[node name="MainCamera" type="Camera" parent="Viewport"]
-current = true
-far = 1000.0
-
 [node name="PlaneHUD" parent="." instance=ExtResource( 3 )]
 
 [connection signal="can_hit" from="." to="PlaneHUD" method="_on_PlaneHandler_can_hit"]
 [connection signal="plane_down" from="." to="PlaneHUD" method="_on_PlaneHandler_plane_down"]
 [connection signal="setup_plane" from="." to="PlaneHUD" method="_on_PlaneHandler_setup_plane"]
+[connection signal="update_airspeed" from="." to="PlaneHUD" method="_on_PlaneHandler_update_airspeed"]
 [connection signal="update_altitude" from="." to="PlaneHUD" method="_on_PlaneHandler_update_altitude"]
 [connection signal="update_ammo" from="." to="PlaneHUD" method="_on_PlaneHandler_update_ammo"]
 [connection signal="update_fuel" from="." to="PlaneHUD" method="_on_PlaneHandler_update_fuel"]
 [connection signal="update_health" from="." to="PlaneHUD" method="_on_PlaneHandler_update_health"]
 [connection signal="update_kills" from="." to="PlaneHUD" method="_on_PlaneHandler_update_kills"]
-[connection signal="update_pilot_view" from="." to="PlaneHUD" method="_on_PlaneHandler_update_pilot_view"]
 [connection signal="update_radar" from="." to="PlaneHUD" method="_on_PlaneHandler_update_radar"]
 [connection signal="upgrade" from="." to="Biplane" method="_on_PlaneHandler_upgrade"]
 [connection signal="can_hit" from="Biplane" to="." method="_on_Biplane_can_hit"]
 [connection signal="dead" from="Biplane" to="." method="_on_Biplane_dead"]
+[connection signal="update_airspeed" from="Biplane" to="." method="_on_Biplane_update_airspeed"]
 [connection signal="update_ammo" from="Biplane" to="." method="_on_Biplane_update_ammo"]
 [connection signal="update_fuel" from="Biplane" to="." method="_on_Biplane_update_fuel"]
 [connection signal="update_health" from="Biplane" to="." method="_on_Biplane_update_health"]

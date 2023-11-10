@@ -4,7 +4,8 @@ extends KinematicBody
 signal update_fuel(value)
 signal update_health(value)
 signal update_ammo(value)
-signal dead(killer_id)
+signal update_airspeed(value)
+signal dead(plane_id, killer_id)
 signal can_hit(value)
 
 # turning speed in revolutions per second
@@ -12,8 +13,7 @@ export var turn_speed := 1.0
 export var buffer_zone := 0.05
 export var roll_speed := 1.3
 export var flight_speed := 30.0
-export (float, 0.0, 0.9) var lift_factor := 0.25
-export var gravity := 7.5
+export var gravity := 9.81
 export var accel_factor := 1.6
 export var deaccel_factor := 1.2
 export var max_speed := 45.0
@@ -32,6 +32,7 @@ var _ammo := 20
 var _rotation_inertia := Vector3.ZERO
 var _actual_speed := flight_speed
 var _can_shoot := true
+var _air_speed := 0.0
 var altitude : float setget , _get_altitude
 var player_id := ""
 var color : Color setget _set_color
@@ -42,6 +43,7 @@ var auto_right := false
 
 onready var _reload_timer : Timer = $ReloadTimer
 onready var _shoot_player : VariableStreamPlayer = $ShootPlayer
+onready var _lift_factor := gravity / flight_speed
 
 
 func _physics_process(delta:float)->void:
@@ -55,8 +57,11 @@ func _physics_process(delta:float)->void:
 	if Input.is_action_pressed("thrust" + player_id) and _secs_fuel > 0:
 		if _actual_speed < max_speed:
 			_actual_speed += delta * accel_factor * (max_speed - flight_speed)
-	elif _actual_speed > flight_speed:
-		_actual_speed -= delta * deaccel_factor * (max_speed - flight_speed) / 2
+		_secs_fuel -= delta * _actual_speed / flight_speed
+		emit_signal("update_fuel", _secs_fuel)
+	elif _actual_speed > 0:
+		_actual_speed -= delta * deaccel_factor * pow(_actual_speed / max_speed, 2) * 10.0
+	
 	
 	if Input.is_action_pressed("shoot" + player_id) and _can_shoot and _ammo > 0:
 		_shoot()
@@ -75,9 +80,12 @@ func _physics_process(delta:float)->void:
 		rotate_object_local(Vector3.FORWARD, _rotation_inertia.z * delta)
 	
 	# I don't know why this works, but it does. https://www.reddit.com/r/godot/comments/g4d232/how_to_get_a_kinematicbody_to_move_in_its_local/
-	var movement_vector := transform.basis.xform(Vector3(0, lift_factor, -1)) * _actual_speed
-	# the gravity mitigation is for ease of flight.
-	movement_vector.y -= (gravity - gravity_mitigation)
+	var movement_vector := transform.basis.xform(Vector3(0, _lift_factor, -1)) * _actual_speed
+	
+	movement_vector.y -= gravity - gravity_mitigation
+	
+	_air_speed = movement_vector.length()
+	emit_signal("update_airspeed", _air_speed)
 	
 	var collision := move_and_collide(movement_vector * delta)
 	if collision != null:
@@ -85,10 +93,7 @@ func _physics_process(delta:float)->void:
 			death(true)
 			if collision.collider.has_method("death"):
 				collision.collider.death(true)
-	if _secs_fuel > 0:
-		_secs_fuel -= delta * _actual_speed / flight_speed
-		emit_signal("update_fuel", _secs_fuel)
-	elif gravity_mitigation > -20:
+	if gravity_mitigation > -20 and _secs_fuel <= 0.0:
 		gravity_mitigation -= delta * 3
 		if rotation.x > -PI/4:
 			rotation.x -= delta
@@ -105,7 +110,7 @@ func _physics_process(delta:float)->void:
 
 
 func _calculate_rotation_inertia(yaw:float, pitch:float, roll:float, delta:float)->void:
-	var percent_total_speed := _actual_speed / flight_speed
+	var percent_total_speed := _air_speed / flight_speed
 	
 	if yaw == 0 and _rotation_inertia.x != 0:
 		_rotation_inertia.x -= delta * sign(_rotation_inertia.x) * deaccel_factor
@@ -162,11 +167,11 @@ func _shoot()->void:
 
 func damage(amount:int, attacker_id:int)->void:
 	_health -= amount
-	if _health <= 0:
+	if _health <= 0 and not dead:
 		dead = true
 		death()
 		$SmokeParticles.emitting = true
-		emit_signal("dead", attacker_id)
+		emit_signal("dead", int(player_id[1]), attacker_id)
 	emit_signal("update_health", _health)
 
 
@@ -179,7 +184,7 @@ func death(explode := false)->void:
 	emit_signal("update_health", _health)
 	
 	if not dead:
-		emit_signal("dead", -1)
+		emit_signal("dead", int(player_id[1]), -1)
 	dead = true
 	
 	if explode:
@@ -276,7 +281,6 @@ func restart()->void:
 	_actual_speed = flight_speed
 	_rotation_inertia = Vector3.ZERO
 	gravity_mitigation = 0.0
-	lift_factor = gravity / flight_speed
 	_health = max_health
 	_ammo = max_ammo
 	_secs_fuel = max_fuel

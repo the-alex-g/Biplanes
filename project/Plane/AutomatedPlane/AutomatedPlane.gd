@@ -1,7 +1,7 @@
 class_name AutoPlane
 extends KinematicBody
 
-signal dead(killer_id)
+signal dead(player_id, killer_id)
 
 var health := 1#45
 var direction : float = PI / 4
@@ -64,12 +64,12 @@ func damage(amount:int, attacker_id:int)->void:
 	if health <= 0:
 		_shot_down = true
 		death()
-		emit_signal("dead", attacker_id)
+		emit_signal("dead", -1, attacker_id)
 
 
 func death(explode := false)->void:
 	if not _shot_down and not dead:
-		emit_signal("dead", -1)
+		emit_signal("dead", -1, -1)
 	
 	dead = true
 	$CPUParticles.emitting = true
@@ -92,7 +92,7 @@ func _on_Area_body_entered(body:PhysicsBody)->void:
 		_target.connect("dead", self, "_on_target_dead", [], CONNECT_ONESHOT)
 
 
-func _on_target_dead(_killer_id:int)->void:
+func _on_target_dead(_target_color:Color, _killer_id:int)->void:
 	_target = null
 
 
